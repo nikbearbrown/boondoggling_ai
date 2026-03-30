@@ -40,7 +40,7 @@ export default function HomePage() {
       <section className="w-full py-24 bg-[var(--bb-8)]">
         <div className="container px-4 md:px-6 mx-auto max-w-3xl">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
-            You use Claude. You don&rsquo;t conduct it.
+            Anyone can use Claude Code. Boondogglers conduct it.
           </h1>
           <div className="space-y-4 text-lg leading-relaxed text-[var(--bb-1)]">
             <p>
