@@ -104,6 +104,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
+          <p className="italic text-foreground/70 mb-2">Anyone can use Claude Code. Boondogglers conduct it.</p>
           <p>&copy; {currentYear} Boondoggling.ai. All rights reserved.</p>
           <p className="mt-2">
             Boondoggling.ai is open source (MIT License) · Built by{' '}
