@@ -117,7 +117,13 @@ export default async function ToolPage({
           </div>
         </div>
         <div className="container px-4 md:px-6 mx-auto py-8 max-w-4xl">
-          <PromptViewer promptText={tool.prompt_text || ''} />
+          {tool.prompt_text ? (
+            <PromptViewer promptText={tool.prompt_text} />
+          ) : (
+            <div className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
+              <p>This prompt has not been configured yet.</p>
+            </div>
+          )}
         </div>
       </div>
     )
