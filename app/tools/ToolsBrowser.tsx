@@ -17,9 +17,11 @@ interface Tool {
   name: string
   slug: string
   description: string
-  tool_type: 'link' | 'artifact'
+  tool_type: 'link' | 'artifact' | 'prompt'
   claude_url: string | null
   tags: string[]
+  quality_signal: string | null
+  version: string | null
 }
 
 export default function ToolsBrowser({ tools, filterTags = [] }: { tools: Tool[]; filterTags?: string[] }) {
@@ -49,6 +51,15 @@ export default function ToolsBrowser({ tools, filterTags = [] }: { tools: Tool[]
     }
     return result
   }, [tools, query, activeTag])
+
+  function toolTypeLabel(type: string) {
+    switch (type) {
+      case 'artifact': return 'Artifact'
+      case 'prompt': return 'Prompt'
+      case 'link': return 'Link'
+      default: return type
+    }
+  }
 
   return (
     <>
@@ -105,55 +116,62 @@ export default function ToolsBrowser({ tools, filterTags = [] }: { tools: Tool[]
       ) : (
         <div className="grid gap-6 sm:grid-cols-2">
           {filtered.map((tool) => {
-            const isArtifact = tool.tool_type === 'artifact'
-            const href = isArtifact ? `/tools/${tool.slug}` : tool.claude_url
+            const isLink = tool.tool_type === 'link'
+            const href = isLink ? tool.claude_url : `/tools/${tool.slug}`
 
             const cardContent = (
               <Card className="h-full transition-shadow hover:shadow-md">
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
+                  <CardTitle className="text-lg flex items-center gap-2 flex-wrap">
                     {tool.name}
-                    {isArtifact && (
-                      <Badge variant="default" className="text-xs">
-                        Artifact
-                      </Badge>
-                    )}
+                    <Badge variant="secondary" className="text-xs">
+                      {toolTypeLabel(tool.tool_type)}
+                    </Badge>
+                    <Badge
+                      variant={tool.quality_signal === 'curated' ? 'default' : 'outline'}
+                      className="text-xs"
+                    >
+                      {tool.quality_signal === 'curated' ? 'Curated' : 'Community'}
+                    </Badge>
                   </CardTitle>
                   {tool.description && (
                     <CardDescription>{tool.description}</CardDescription>
                   )}
                 </CardHeader>
                 <CardContent>
-                  {tool.tags && tool.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {tool.tags.map((tag) => (
+                  <div className="flex flex-wrap gap-1.5 items-center">
+                    {tool.version && (
+                      <span className="text-xs text-muted-foreground">v{tool.version}</span>
+                    )}
+                    {tool.tags && tool.tags.length > 0 &&
+                      tool.tags.map((tag) => (
                         <Badge key={tag} variant="secondary" className="text-xs">
                           {tag}
                         </Badge>
-                      ))}
-                    </div>
-                  )}
+                      ))
+                    }
+                  </div>
                 </CardContent>
               </Card>
             )
 
-            if (isArtifact) {
+            if (isLink) {
               return (
-                <Link key={tool.id} href={href!}>
+                <a
+                  key={tool.id}
+                  href={href || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {cardContent}
-                </Link>
+                </a>
               )
             }
 
             return (
-              <a
-                key={tool.id}
-                href={href || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link key={tool.id} href={href!}>
                 {cardContent}
-              </a>
+              </Link>
             )
           })}
         </div>

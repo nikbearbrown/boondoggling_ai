@@ -4,6 +4,7 @@ import { join } from 'path'
 import { existsSync } from 'fs'
 import { sql } from '@/lib/db'
 import { scanHtmlDir } from '@/lib/html-meta'
+import PromptViewer from './PromptViewer'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,27 +23,25 @@ export async function generateMetadata({
 }) {
   const { slug } = await params
 
-  // Check filesystem first
   const doc = getArtifactDoc(slug)
   if (doc) {
     return {
-      title: `${doc.title} - Irreducibly Human Tools`,
-      description: doc.description || `${doc.title} — tool by Irreducibly Human`,
+      title: `${doc.title} - Boondoggling.ai Tools`,
+      description: doc.description || `${doc.title} — tool by Boondoggling.ai`,
     }
   }
 
-  // Fall back to database
   try {
-    const rows = await sql`SELECT name, description FROM tools WHERE slug = ${slug}`
+    const rows = await sql`SELECT name, description FROM tools WHERE slug = ${slug} AND published = true`
     if (rows.length > 0) {
       return {
-        title: `${rows[0].name} - Irreducibly Human Tools`,
-        description: rows[0].description || `${rows[0].name} — tool by Irreducibly Human`,
+        title: `${rows[0].name} - Boondoggling.ai Tools`,
+        description: rows[0].description || `${rows[0].name} — tool by Boondoggling.ai`,
       }
     }
   } catch {}
 
-  return { title: 'Tool - Irreducibly Human' }
+  return { title: 'Tool - Boondoggling.ai' }
 }
 
 export default async function ToolPage({
@@ -52,7 +51,7 @@ export default async function ToolPage({
 }) {
   const { slug } = await params
 
-  // Check filesystem first
+  // Check filesystem first (artifact tools)
   const doc = getArtifactDoc(slug)
   if (doc) {
     return (
@@ -63,7 +62,7 @@ export default async function ToolPage({
               href="/tools"
               className="text-sm text-muted-foreground hover:text-foreground mb-1 inline-block"
             >
-              ← Back to Tools
+              &larr; Back to Tools
             </Link>
             <h1 className="text-2xl font-bold tracking-tighter">{doc.title}</h1>
             {doc.description && (
@@ -83,16 +82,48 @@ export default async function ToolPage({
     )
   }
 
-  // Fall back to database for link tools
+  // Fall back to database
   let tool
   try {
-    const rows = await sql`SELECT * FROM tools WHERE slug = ${slug}`
+    const rows = await sql`SELECT * FROM tools WHERE slug = ${slug} AND published = true`
     if (rows.length > 0) tool = rows[0]
   } catch {}
 
   if (!tool) notFound()
 
-  // Build iframe src for legacy DB artifacts
+  // --- Prompt tool type ---
+  if (tool.tool_type === 'prompt') {
+    return (
+      <div className="flex flex-col w-full" style={{ minHeight: 'calc(100vh - 4rem)' }}>
+        <div className="w-full border-b bg-background">
+          <div className="container px-4 md:px-6 mx-auto py-4">
+            <Link
+              href="/tools"
+              className="text-sm text-muted-foreground hover:text-foreground mb-1 inline-block"
+            >
+              &larr; Back to Tools
+            </Link>
+            <div className="flex items-center gap-3 flex-wrap">
+              <h1 className="text-2xl font-bold tracking-tighter">{tool.name}</h1>
+              {tool.version && (
+                <span className="text-xs text-muted-foreground border rounded px-2 py-0.5">
+                  Version {tool.version}
+                </span>
+              )}
+            </div>
+            {tool.description && (
+              <p className="text-sm text-muted-foreground mt-1">{tool.description}</p>
+            )}
+          </div>
+        </div>
+        <div className="container px-4 md:px-6 mx-auto py-8 max-w-4xl">
+          <PromptViewer promptText={tool.prompt_text || ''} />
+        </div>
+      </div>
+    )
+  }
+
+  // --- Artifact / Link tool types (existing behavior) ---
   let iframeSrc = ''
   let useRawEmbed = false
 
@@ -111,7 +142,7 @@ export default async function ToolPage({
               href="/tools"
               className="text-sm text-muted-foreground hover:text-foreground mb-1 inline-block"
             >
-              ← Back to Tools
+              &larr; Back to Tools
             </Link>
             <h1 className="text-2xl font-bold tracking-tighter">{tool.name}</h1>
             {tool.description && (
