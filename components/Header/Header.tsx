@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 import ThemeToggle from '@/components/ThemeToggle'
 
 const NAV_ITEMS = [
-  { name: 'About', href: '/about' },
+  { name: 'Boondoggling', href: '/boondoggling' },
   { name: 'Blog', href: '/blog' },
   { name: 'Tools', href: '/tools' },
   { name: 'Dev', href: '/dev' },
@@ -44,9 +44,8 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container px-4 md:px-6 mx-auto flex h-16 items-center justify-between">
         <div className="flex items-center gap-6 md:gap-10">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center space-x-2">
             <span className="text-lg font-bold tracking-tighter">Boondoggling.ai</span>
-            <span className="hidden md:inline text-xs text-muted-foreground italic">Anyone can use Claude Code. Boondogglers conduct it.</span>
           </Link>
           <nav className="hidden lg:flex gap-6">
             {NAV_ITEMS.map((item) => (
