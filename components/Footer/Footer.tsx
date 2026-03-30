@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Company Info */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold">Boondoggling.ai</h3>
+            <h3 className="text-sm font-semibold">Bear Brown, LLC</h3>
             <div className="text-sm text-muted-foreground space-y-1">
               <p>30 N Gould St Ste N</p>
               <p>Sheridan, WY 82801</p>
@@ -105,7 +105,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
           <p className="italic text-foreground/70 mb-2">Anyone can use Claude Code. Boondogglers conduct it.</p>
-          <p>&copy; {currentYear} Boondoggling.ai. All rights reserved.</p>
+          <p>&copy; {currentYear} Bear Brown, LLC. All rights reserved.</p>
           <p className="mt-2">
             Boondoggling.ai is open source (MIT License) · Built by{' '}
             <a href="https://www.bearbrown.co/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Nik Bear Brown</a>
