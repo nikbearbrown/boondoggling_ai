@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import crypto from 'crypto'
 import { generateSessionToken } from '@/lib/admin-auth'
 
 export async function POST(req: NextRequest) {
@@ -12,7 +13,14 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  if (password !== adminPassword) {
+  // Constant-time comparison to prevent timing attacks
+  const passwordBuffer = Buffer.from(password || '')
+  const expectedBuffer = Buffer.from(adminPassword)
+  const match =
+    passwordBuffer.length === expectedBuffer.length &&
+    crypto.timingSafeEqual(passwordBuffer, expectedBuffer)
+
+  if (!match) {
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
   }
 

@@ -26,18 +26,43 @@ async function isValidSession(cookieValue: string, secret: string): Promise<bool
 }
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Allow login/logout endpoints without auth
+  if (pathname === '/api/admin/login' || pathname === '/api/admin/logout') {
+    return NextResponse.next()
+  }
+
+  // Allow /admin/login page without auth
+  if (pathname === '/admin/login') {
+    return NextResponse.next()
+  }
+
+  // For /api/admin/* write routes, return 401 JSON instead of redirect
+  const isApiRoute = pathname.startsWith('/api/admin/')
+  if (isApiRoute && request.method === 'GET') {
+    // GET requests to admin API still require auth but are checked by isAdmin() in handlers
+    return NextResponse.next()
+  }
+
   const session = request.cookies.get('admin_session')
   const secret = process.env.ADMIN_PASSWORD
 
   if (!session?.value || !secret) {
-    const loginUrl = new URL('/admin/login', request.url)
-    return NextResponse.redirect(loginUrl)
+    if (isApiRoute) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    return NextResponse.redirect(new URL('/admin/login', request.url))
   }
 
   const valid = await isValidSession(session.value, secret)
   if (!valid) {
-    const loginUrl = new URL('/admin/login', request.url)
-    const response = NextResponse.redirect(loginUrl)
+    if (isApiRoute) {
+      const response = NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      response.cookies.delete('admin_session')
+      return response
+    }
+    const response = NextResponse.redirect(new URL('/admin/login', request.url))
     response.cookies.delete('admin_session')
     return response
   }
@@ -46,5 +71,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/dashboard/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 }
