@@ -1,234 +1,182 @@
 import Link from 'next/link'
 
-const buttonStyles =
-  'inline-flex h-10 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-black text-white shadow hover:bg-gray-800 dark:border dark:border-input dark:bg-background dark:text-foreground dark:shadow-sm dark:hover:bg-accent dark:hover:text-accent-foreground'
-
-const buttonOutline =
-  'inline-flex h-10 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground'
-
-const SECTIONS = [
+const CAPACITIES = [
   {
-    title: 'TOOLS',
+    code: 'PA',
+    name: 'Plausibility Auditing',
     description:
-      'Interactive AI artifacts and curated tool links. Explore prompt engineering aids, visualization generators, and educational utilities — all runnable in your browser.',
-    link: 'Browse Tools',
-    href: '/tools',
+      'Hear the wrong note before you recompute it. Claude produces fluent output that may be structurally unsound — you catch what passes every syntax check.',
   },
   {
-    title: 'BLOG',
+    code: 'PF',
+    name: 'Problem Formulation',
     description:
-      'Articles on AI, education, technology, and the intersection of human judgment with machine capability. Written by practitioners, for practitioners.',
-    link: 'Read the Blog',
-    href: '/blog',
+      'Rewrite the question so the answer becomes findable. Claude optimises within the frame you give it — you decide whether the frame is the right one.',
   },
   {
-    title: 'BOOKS',
+    code: 'TO',
+    name: 'Tool Orchestration',
     description:
-      'Open-access book chapters and course materials. Browse structured curricula with full table-of-contents navigation and in-browser reading.',
-    link: 'Explore Books',
-    href: '/books',
+      'Choose which tool runs, in what order, with what constraints. Claude executes a single turn — you sequence the pipeline across turns, tools, and contexts.',
   },
   {
-    title: 'NOTES',
+    code: 'IJ',
+    name: 'Interpretive Judgment',
     description:
-      'Research notes, workshop materials, and working documents organized by topic. A living reference for ongoing projects and curriculum development.',
-    link: 'Browse Notes',
-    href: '/notes',
+      'Decide what the output means for this situation, this user, this deadline. Claude returns text — you supply the judgment that text alone cannot carry.',
   },
   {
-    title: 'DEV DOCS',
+    code: 'EI',
+    name: 'Executive Integration',
     description:
-      'Technical documentation, architecture guides, and developer references. Searchable, tag-filtered, and designed for quick lookup.',
-    link: 'Read Dev Docs',
-    href: '/dev',
-  },
-  {
-    title: 'VIDEOS',
-    description:
-      'Video tutorials, feature demos, and educational content. Curated playlists organized by topic with tag-based filtering.',
-    link: 'Watch Videos',
-    href: '/videos',
-  },
-]
-
-const AUDIENCES = [
-  {
-    heading: 'FOR DEVELOPERS',
-    items: [
-      'AI-tool-capable but need structured references and docs',
-      'Building systems that require human judgment at the boundary',
-      'Looking for open-source templates and patterns',
-      'Want practical tools, not just theory',
-    ],
-  },
-  {
-    heading: 'FOR EDUCATORS',
-    items: [
-      'Deploying AI in classroom and workshop settings',
-      'Need curriculum materials and course content',
-      'Designing learning experiences that develop human skills',
-      'Looking for open educational resources',
-    ],
-  },
-  {
-    heading: 'FOR CREATORS',
-    items: [
-      'Using AI tools in creative and editorial workflows',
-      'Need judgment frameworks for AI-assisted work',
-      'Building content pipelines with human oversight',
-      'Looking for inspiration and practical examples',
-    ],
+      'Hold the whole build in your head. Claude sees one prompt at a time — you hold the architecture, the tradeoffs, and the accountability across all of them.',
   },
 ]
 
 export default function HomePage() {
   return (
     <div className="flex flex-col w-full">
-      {/* Hero Section */}
-      <section className="w-full py-16 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="flex flex-col justify-center space-y-6 max-w-3xl">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-              Boondoggling.ai
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              AI tools, content, and resources — open source
+      {/* Beat 1 — What is boondoggling? */}
+      <section className="w-full py-24 bg-[var(--bb-8)]">
+        <div className="container px-4 md:px-6 mx-auto max-w-3xl">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
+            You use Claude. You don&rsquo;t conduct it.
+          </h1>
+          <div className="space-y-4 text-lg leading-relaxed text-[var(--bb-1)]">
+            <p>
+              Claude solves faster than any human. That gap will not close — it will
+              widen. What will not change: Claude cannot verify its output against domain
+              reality, cannot reframe a poorly formulated problem, cannot supply
+              accountability when the build ships.
             </p>
-            <p className="max-w-[540px] text-lg leading-relaxed">
-              A platform for interactive AI tools, educational content, dev documentation,
-              and curated resources. Built with Next.js and designed for practitioners
-              who work with AI every day.
+            <p>
+              The human&rsquo;s job is not to type less. It is to decide more precisely —
+              what to build, in what order, and what counts as done. That is conducting.
+              Boondoggling is the practice of learning how.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Link href="/tools" className={buttonStyles}>
-                Explore Tools
-              </Link>
-              <Link href="/about" className={buttonOutline}>
-                About
-              </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Beat 2 — Why does it matter? */}
+      <section className="w-full py-24 bg-white dark:bg-background">
+        <div className="container px-4 md:px-6 mx-auto max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-12">
+            The five things only you can do.
+          </h2>
+          <div className="space-y-8">
+            {CAPACITIES.map((cap) => (
+              <div key={cap.code} className="flex gap-4">
+                <div className="shrink-0 w-12 pt-1">
+                  <span className="font-mono text-sm font-bold text-[var(--bb-5)]">
+                    [{cap.code}]
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[var(--bb-2)] mb-1">
+                    {cap.name}
+                  </h3>
+                  <p className="text-[var(--bb-1)] leading-relaxed">
+                    {cap.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Beat 3 — How does it work? */}
+      <section className="w-full py-24 bg-[var(--bb-8)]">
+        <div className="container px-4 md:px-6 mx-auto max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
+            Meet Gru.
+          </h2>
+          <div className="space-y-4 text-lg leading-relaxed text-[var(--bb-1)]">
+            <p>
+              Gru is a system prompt for Claude that builds Software Design Documents
+              and generates a Boondoggle Score — a sequenced, dependency-ordered plan
+              that separates what Claude builds from what you build.
+            </p>
+            <p>
+              You run it in your own Claude Project. No account on this site, no API key,
+              no paywall. The videos show you how.
+            </p>
+          </div>
+          <div className="mt-8">
+            <Link
+              href="/videos"
+              className="text-[var(--bb-2)] font-medium hover:underline"
+            >
+              Watch how it works &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Beat 4 — Get the tool */}
+      <section className="w-full py-24 bg-white dark:bg-background">
+        <div className="container px-4 md:px-6 mx-auto max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
+            Copy Gru. Paste it into a Claude Project. Start building.
+          </h2>
+          <div className="space-y-6 text-lg text-[var(--bb-1)]">
+            <div className="flex gap-4">
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--bb-7)] text-[var(--bb-1)] flex items-center justify-center text-sm font-bold">
+                1
+              </span>
+              <p className="leading-relaxed pt-1">
+                Go to <Link href="/tools" className="font-medium underline hover:text-[var(--bb-2)]">/tools</Link> and
+                copy the Gru system prompt.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--bb-7)] text-[var(--bb-1)] flex items-center justify-center text-sm font-bold">
+                2
+              </span>
+              <p className="leading-relaxed pt-1">
+                Open claude.ai &rarr; create a new Project &rarr; paste into Project Instructions.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--bb-7)] text-[var(--bb-1)] flex items-center justify-center text-sm font-bold">
+                3
+              </span>
+              <p className="leading-relaxed pt-1">
+                Type <code className="bg-[var(--bb-8)] px-1.5 py-0.5 rounded text-sm font-mono">/help</code> to start.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Platform Section */}
-      <section className="w-full py-16 md:py-24 bg-muted/40">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-12 max-w-3xl mx-auto">
-            <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-3">
-              The Platform
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Six content systems, each serving a different need. Browse tools,
-              read long-form content, reference documentation, or watch tutorials.
-            </p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2">
-            {SECTIONS.map((section) => (
-              <div
-                key={section.title}
-                className="rounded-lg border bg-card p-8 shadow-sm flex flex-col"
-              >
-                <h3 className="text-lg font-bold tracking-wide mb-3">
-                  {section.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed flex-1">
-                  {section.description}
-                </p>
-                <Link
-                  href={section.href}
-                  className="mt-6 text-sm font-medium text-foreground hover:underline"
-                >
-                  {section.link} &rarr;
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Who This Is For Section */}
-      <section className="w-full py-16 md:py-24 bg-foreground text-background">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-sm font-semibold tracking-widest uppercase text-background/60 mb-3">
-              Who This Is For
-            </h2>
-            <p className="text-lg text-background/70 max-w-2xl mx-auto">
-              Built for practitioners who use AI daily and need structured resources,
-              not just hype.
-            </p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {AUDIENCES.map((audience) => (
-              <div
-                key={audience.heading}
-                className="rounded-lg border border-background/10 bg-background/5 p-8"
-              >
-                <h3 className="text-lg font-bold tracking-wide mb-4">
-                  {audience.heading}
-                </h3>
-                <ul className="space-y-3">
-                  {audience.items.map((item) => (
-                    <li
-                      key={item}
-                      className="text-background/80 text-sm leading-relaxed flex gap-2"
-                    >
-                      <span className="text-background/40 shrink-0">&mdash;</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="w-full py-16 md:py-24 bg-[var(--bb-2)] text-white">
-        <div className="container px-4 md:px-6 mx-auto text-center">
-          <h2 className="text-sm font-semibold tracking-widest uppercase text-white/60 mb-3">
-            Get Started
-          </h2>
-          <p className="text-lg text-white/80 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Start with the tools — interactive AI artifacts you can run in your browser.
-            Then explore the blog, books, and documentation for deeper dives.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="mt-10">
             <Link
               href="/tools"
-              className="inline-flex h-10 items-center justify-center rounded-md px-8 text-sm font-bold tracking-wide transition-colors bg-white text-[var(--bb-2)] shadow hover:bg-white/90"
+              className="inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors bg-[var(--bb-2)] text-white shadow hover:bg-[var(--bb-1)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
-              BROWSE TOOLS
-            </Link>
-            <Link
-              href="/blog"
-              className="inline-flex h-10 items-center justify-center rounded-md px-8 text-sm font-bold tracking-wide transition-colors border border-white/30 text-white hover:bg-white/10"
-            >
-              READ THE BLOG
+              Get Gru &rarr;
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="w-full py-16 md:py-24 bg-foreground text-background">
-        <div className="container px-4 md:px-6 mx-auto text-center">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl mb-4">
-            Bear Brown &amp; Company
+      {/* Beat 5 — See it in action */}
+      <section className="w-full py-24 bg-[var(--bb-8)]">
+        <div className="container px-4 md:px-6 mx-auto max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
+            Real builds. Real SDDs. Real Boondoggle Scores.
           </h2>
-          <p className="max-w-[600px] mx-auto text-background/70 text-lg mb-8">
-            Boondoggling.ai is a production of Bear Brown &amp; Company.
-            For questions, reach out directly.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="mailto:bear@bearbrown.co"
-              className="inline-flex h-10 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors border border-background/30 text-background hover:bg-background/10"
+          <div className="space-y-4 text-lg leading-relaxed text-[var(--bb-1)]">
+            <p>
+              Every doc in <Link href="/dev" className="font-medium underline hover:text-[var(--bb-2)]">/dev</Link> is
+              a real build produced using Gru. Browse by category — websites, agents, games.
+            </p>
+          </div>
+          <div className="mt-8">
+            <Link
+              href="/dev"
+              className="text-[var(--bb-2)] font-medium hover:underline"
             >
-              bear@bearbrown.co
-            </a>
+              Browse worked examples &rarr;
+            </Link>
           </div>
         </div>
       </section>
