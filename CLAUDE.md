@@ -104,6 +104,10 @@ CREATE TABLE IF NOT EXISTS tools (
   artifact_id TEXT,
   artifact_embed_code TEXT,
   tags TEXT[],
+  prompt_text TEXT,
+  quality_signal TEXT DEFAULT 'community',
+  version TEXT DEFAULT '1.0',
+  published BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -146,9 +150,32 @@ Books are organized into subdirectories under `public/books/`, one folder per bo
 
 ## Dev Docs system
 
-### Adding new dev docs
+### Database (`dev_docs` table in Neon PostgreSQL)
+```sql
+CREATE TABLE IF NOT EXISTS dev_docs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  blob_url TEXT NOT NULL,
+  build_url TEXT,
+  quality_signal TEXT DEFAULT 'community',
+  category TEXT,
+  methodology TEXT,
+  submitted_by TEXT,
+  published BOOLEAN DEFAULT false,
+  published_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+### Adding new dev docs (filesystem)
 1. Build the HTML doc with `<title>`, `<meta name="description">`, and `<meta name="keywords">` tags
 2. Drop into `public/dev/` — appears automatically
+
+### Migrations
+- `scripts/migration-001-dev-docs-and-columns.sql` — creates dev_docs table, adds tools columns, videos blob_url + CHECK constraint, RLS policies
 
 ## Blog system
 
@@ -198,13 +225,15 @@ CREATE TABLE IF NOT EXISTS videos (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   description TEXT,
-  youtube_id TEXT NOT NULL,
+  youtube_id TEXT,
+  blob_url TEXT,
   tags TEXT[] DEFAULT '{}',
   pinned BOOLEAN DEFAULT false,
   published BOOLEAN DEFAULT false,
   published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT video_source_required CHECK (youtube_id IS NOT NULL OR blob_url IS NOT NULL)
 );
 ```
 
