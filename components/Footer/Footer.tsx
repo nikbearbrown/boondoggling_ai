@@ -31,8 +31,14 @@ export default function Footer() {
               <Link href="/tools" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Tools
               </Link>
+              <Link href="/dev" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Dev
+              </Link>
               <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Blog
+              </Link>
+              <Link href="/videos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Videos
               </Link>
               <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 About
@@ -75,14 +81,6 @@ export default function Footer() {
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 YouTube
-              </a>
-              <a
-                href="https://open.spotify.com/artist/0hSpFCJodAYMP2cWK72zI6?si=9Fx2UusBQHi3tTyVEAoCDQ"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Spotify
               </a>
             </div>
           </div>

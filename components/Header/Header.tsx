@@ -8,11 +8,10 @@ import { cn } from '@/lib/utils'
 import ThemeToggle from '@/components/ThemeToggle'
 
 const NAV_ITEMS = [
+  { name: 'About', href: '/about' },
   { name: 'Blog', href: '/blog' },
-  { name: 'Books', href: '/books' },
-  { name: 'Dev', href: '/dev' },
-  { name: 'Notes', href: '/notes' },
   { name: 'Tools', href: '/tools' },
+  { name: 'Dev', href: '/dev' },
   { name: 'Videos', href: '/videos' },
 ]
 
@@ -20,7 +19,6 @@ const SOCIAL_LINKS = [
   { name: 'GitHub', href: 'https://github.com/nikbearbrown/' },
   { name: 'Substack', href: 'https://www.skepticism.ai/' },
   { name: 'YouTube', href: 'https://www.youtube.com/@Musinique' },
-  { name: 'Spotify', href: 'https://open.spotify.com/artist/0hSpFCJodAYMP2cWK72zI6?si=9Fx2UusBQHi3tTyVEAoCDQ' },
 ]
 
 const buttonStyles =

@@ -35,12 +35,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     const tools = await db`
-      SELECT slug, updated_at FROM tools WHERE tool_type = 'artifact'
+      SELECT slug, updated_at FROM tools WHERE published = true
     `
     for (const t of tools) {
       entries.push({
         url: `${BASE_URL}/tools/${t.slug}`,
         lastModified: t.updated_at ? new Date(t.updated_at) : new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.7,
+      })
+    }
+
+    const devDocs = await db`
+      SELECT slug, updated_at, published_at FROM dev_docs WHERE published = true
+    `
+    for (const d of devDocs) {
+      entries.push({
+        url: `${BASE_URL}/dev/${d.slug}`,
+        lastModified: d.updated_at ? new Date(d.updated_at) : d.published_at ? new Date(d.published_at) : new Date(),
         changeFrequency: 'weekly',
         priority: 0.7,
       })
