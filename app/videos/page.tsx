@@ -42,7 +42,7 @@ export default async function VideosPage() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold tracking-tighter mb-4">Videos</h1>
         <p className="text-muted-foreground mb-10">
-          Video tutorials, feature demos, and educational content.
+          Boondoggling tutorials, feature demos, and my fav YouTube videos.
         </p>
         <VideosBrowser
           pinnedVideos={pinned}

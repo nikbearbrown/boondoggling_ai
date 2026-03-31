@@ -81,7 +81,7 @@ export default async function DevPage() {
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold tracking-tighter mb-4">Dev Docs</h1>
         <p className="text-muted-foreground mb-10">
-          Developer documentation, guides, and reference materials.
+          Example boondoggles and Gru output.
         </p>
         <DevBrowser docs={allDocs} />
       </div>
