@@ -9,7 +9,6 @@ import ThemeToggle from '@/components/ThemeToggle'
 
 const NAV_ITEMS = [
   { name: 'Boondoggling', href: '/boondoggling' },
-  { name: 'Blog', href: '/blog' },
   { name: 'Tools', href: '/tools' },
   { name: 'Dev', href: '/dev' },
   { name: 'Videos', href: '/videos' },
