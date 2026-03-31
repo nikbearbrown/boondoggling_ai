@@ -70,7 +70,7 @@ export default async function ToolsPage() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold tracking-tighter mb-4">Tools</h1>
         <p className="text-muted-foreground mb-8">
-          A curated directory of AI tools for educators, students, and professionals.
+          Tools for boondoggling.
         </p>
         <ToolsBrowser tools={allTools} filterTags={filterTags} />
       </div>
