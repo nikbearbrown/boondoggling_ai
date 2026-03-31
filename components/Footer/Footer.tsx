@@ -28,20 +28,17 @@ export default function Footer() {
           <div className="space-y-3">
             <h3 className="text-sm font-semibold">Platform</h3>
             <div className="flex flex-col gap-2">
+              <Link href="/boondoggling" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Boondoggling
+              </Link>
               <Link href="/tools" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Tools
               </Link>
               <Link href="/dev" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Dev
               </Link>
-              <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Blog
-              </Link>
               <Link href="/videos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Videos
-              </Link>
-              <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                About
               </Link>
             </div>
           </div>
