@@ -100,6 +100,9 @@ export default function HomePage() {
                 </dd>
               </div>
             </dl>
+            <p className="mt-8 text-xl font-bold tracking-tight text-[var(--bb-2)]">
+              Software engineering, done well, is conducting.
+            </p>
           </div>
         </div>
       </section>
