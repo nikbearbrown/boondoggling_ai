@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Boondoggling — The Art of Conducting Claude',
@@ -27,7 +28,7 @@ export default function BoondogglingPage() {
           from idea to live in roughly three hours.
         </p>
 
-        <p>Two hours of conversation with Gru. One hour with Claude Code.</p>
+        <p>Two hours of conversation with <Link href="/tools/gru-tool" className="underline">Gru</Link>. One hour with Claude Code.</p>
 
         <p>
           Nearly all the time was spent talking. Not coding. Not debugging. Not googling. Talking — precisely,
@@ -47,7 +48,7 @@ export default function BoondogglingPage() {
         <h2>Gru and the Minions</h2>
 
         <p>
-          The mental model comes from the movie. Gru does not build the rocket. Gru designs the mission,
+          The mental model comes from the movie. <Link href="/tools/gru-tool" className="underline">Gru</Link> does not build the rocket. <Link href="/tools/gru-tool" className="underline">Gru</Link> designs the mission,
           assigns the minions, checks their work, decides what the mission IS, and takes responsibility for
           the outcome.
         </p>
@@ -68,7 +69,7 @@ export default function BoondogglingPage() {
           constraints stated, and a testable handoff condition — and they will produce exactly what you needed.
         </p>
 
-        <p>Your job is not to type less. Your job is to be Gru.</p>
+        <p>Your job is not to type less. Your job is to be <Link href="/tools/gru-tool" className="underline">Gru</Link>.</p>
 
         <hr />
 
@@ -195,7 +196,7 @@ export default function BoondogglingPage() {
 
         <p>
           It is a conductor&rsquo;s score with two simultaneous parts: the Minion Part (exact prompts for
-          Claude, in dependency order) and the Gru Part (precise human actions, labeled by supervisory
+          Claude, in dependency order) and the <Link href="/tools/gru-tool" className="underline">Gru</Link> Part (precise human actions, labeled by supervisory
           capacity, in the same dependency order).
         </p>
 
@@ -309,7 +310,7 @@ export default function BoondogglingPage() {
         </p>
 
         <p className="text-center text-sm text-muted-foreground">
-          Built with Gru. Documented with the methodology it teaches.<br />
+          Built with <Link href="/tools/gru-tool" className="underline">Gru</Link>. Documented with the methodology it teaches.<br />
           boondoggling.ai
         </p>
 

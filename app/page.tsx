@@ -94,7 +94,7 @@ export default function HomePage() {
           </h2>
           <div className="space-y-4 text-lg leading-relaxed text-[var(--bb-1)]">
             <p>
-              Gru is a system prompt for Claude that builds Software Design Documents
+              <Link href="/tools/gru-tool" className="font-medium underline hover:text-[var(--bb-2)]">Gru</Link> is a system prompt for Claude that builds Software Design Documents
               and generates a Boondoggle Score — a sequenced, dependency-ordered plan
               that separates what Claude builds from what you build.
             </p>
@@ -118,7 +118,7 @@ export default function HomePage() {
       <section className="w-full py-24 bg-white dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
-            Copy Gru. Paste it into a Claude Project. Start building.
+            Copy <Link href="/tools/gru-tool" className="underline">Gru</Link>. Paste it into a Claude Project. Start building.
           </h2>
           <div className="space-y-6 text-lg text-[var(--bb-1)]">
             <div className="flex gap-4">
@@ -127,7 +127,7 @@ export default function HomePage() {
               </span>
               <p className="leading-relaxed pt-1">
                 Go to <Link href="/tools" className="font-medium underline hover:text-[var(--bb-2)]">/tools</Link> and
-                copy the Gru system prompt.
+                copy the <Link href="/tools/gru-tool" className="font-medium underline hover:text-[var(--bb-2)]">Gru</Link> system prompt.
               </p>
             </div>
             <div className="flex gap-4">
