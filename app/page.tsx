@@ -58,8 +58,54 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Beat 2 — Why does it matter? */}
+      {/* Beat 1.5 — The language of boondoggling */}
       <section className="w-full py-24 bg-white dark:bg-background">
+        <div className="container px-4 md:px-6 mx-auto max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
+            Boondoggling, frick-fracking, noodling.
+          </h2>
+          <div className="space-y-4 text-lg leading-relaxed text-[var(--bb-1)]">
+            <p>
+              While Claude thinks, the status line cycles through silly words —
+              boondoggling, cogitating, lollygagging, spelunking, meandering, pondering.
+              This site got its name from those terms. We liked the vibe.
+            </p>
+            <p>
+              Some of them turned into real concepts:
+            </p>
+            <dl className="space-y-4 mt-4">
+              <div>
+                <dt className="font-bold text-[var(--bb-2)]">Boondoggling</dt>
+                <dd className="mt-1">
+                  A boondoggle is a structured build plan that Gru generates alongside a
+                  detailed Software Design Document. It splits the work into{' '}
+                  <strong>Minion steps</strong> — the exact prompts that Claude Code or a
+                  similar tool needs to run, in the required order — and{' '}
+                  <strong>Gru steps</strong> — a step-by-step recipe of what the human
+                  needs to do and how to check and verify each step ran correctly.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-bold text-[var(--bb-2)]">Frick-fracking</dt>
+                <dd className="mt-1">
+                  The process of making small, iterative changes to a working app.
+                  Right now I&rsquo;m frick-fracking — adding this very text to the site.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-bold text-[var(--bb-2)]">Noodling</dt>
+                <dd className="mt-1">
+                  Dreaming up new features over coffee, at the gym, or listening to music.
+                  Noodling is where builds start — before a single prompt gets typed.
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* Beat 2 — Why does it matter? */}
+      <section className="w-full py-24 bg-[var(--bb-8)]">
         <div className="container px-4 md:px-6 mx-auto max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-12">
             The five things only you can do.
@@ -87,7 +133,7 @@ export default function HomePage() {
       </section>
 
       {/* Beat 3 — How does it work? */}
-      <section className="w-full py-24 bg-[var(--bb-8)]">
+      <section className="w-full py-24 bg-white dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
             Meet Gru.
@@ -115,7 +161,7 @@ export default function HomePage() {
       </section>
 
       {/* Beat 4 — Get the tool */}
-      <section className="w-full py-24 bg-white dark:bg-background">
+      <section className="w-full py-24 bg-[var(--bb-8)]">
         <div className="container px-4 md:px-6 mx-auto max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
             Copy <Link href="/tools/gru-tool" className="underline">Gru</Link>. Paste it into a Claude Project. Start building.
@@ -159,7 +205,7 @@ export default function HomePage() {
       </section>
 
       {/* Beat 5 — See it in action */}
-      <section className="w-full py-24 bg-[var(--bb-8)]">
+      <section className="w-full py-24 bg-white dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--bb-2)] mb-8">
             Real builds. Real SDDs. Real Boondoggle Scores.
