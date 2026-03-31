@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boondoggling.ai — Owner's Guide</title>
+<meta name="description" content="Everything you need to run boondoggling.ai — publishing content, managing the admin dashboard, deploying changes, maintaining the database, and using the Boondoggling methodology for site updates.">
+<meta name="keywords" content="boondoggling, site administration, content management, Vercel, Neon database, Claude Code, owner guide, deployment, frick-fracking">
+<meta name="date" content="2026-03-30">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bb-1: #1a0a00;
+  --bb-2: #8B3A0F;
+  --bb-3: #C0392B;
+  --bb-4: #E8A020;
+  --bb-5: #D4500A;
+  --bb-6: #B8860B;
+  --bb-7: #C8A96E;
+  --bb-8: #F0E6D0;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bb-8);
+  color: var(--bb-1);
+  font-family: 'Inter', sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* ── HEADER ── */
+.site-header {
+  border-bottom: 1px solid var(--bb-7);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--bb-8);
+  z-index: 100;
+}
+
+.wordmark {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bb-2);
+  letter-spacing: -0.01em;
+}
+
+nav { display: flex; gap: 24px; }
+nav a {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bb-5);
+  text-decoration: none;
+}
+nav a:hover { color: var(--bb-2); }
+
+/* ── LAYOUT ── */
+.body-wrap {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  padding: 40px 0 80px;
+  position: sticky;
+  top: 61px;
+  max-height: calc(100vh - 61px);
+  overflow-y: auto;
+}
+
+.sidebar-label {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bb-6);
+  margin-bottom: 12px;
+}
+
+.sidebar nav { flex-direction: column; gap: 0; }
+.sidebar nav a {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--bb-1);
+  opacity: 0.7;
+  display: block;
+  padding: 5px 0 5px 12px;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+}
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  color: var(--bb-2);
+  opacity: 1;
+  border-left-color: var(--bb-4);
+}
+
+/* ── CONTENT ── */
+.content {
+  padding: 40px 0 80px;
+  max-width: 720px;
+}
+
+.article-header {
+  padding-bottom: 36px;
+  border-bottom: 2px solid var(--bb-7);
+  margin-bottom: 48px;
+}
+
+.article-label {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bb-5);
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 600;
+  color: var(--bb-2);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.deck {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--bb-1);
+  opacity: 0.75;
+  margin-bottom: 20px;
+}
+
+.dateline {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--bb-6);
+  letter-spacing: 0.06em;
+}
+
+/* ── TYPOGRAPHY ── */
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--bb-2);
+  margin: 48px 0 16px;
+  letter-spacing: -0.01em;
+  scroll-margin-top: 80px;
+}
+
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--bb-5);
+  margin: 28px 0 10px;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+p { margin-bottom: 18px; }
+
+a { color: var(--bb-5); text-decoration: none; }
+a:hover { color: var(--bb-2); text-decoration: underline; }
+
+code {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  background: rgba(200, 169, 110, 0.2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--bb-2);
+}
+
+pre {
+  background: rgba(26, 10, 0, 0.05);
+  border: 1px solid var(--bb-7);
+  border-radius: 5px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--bb-1);
+  border-radius: 0;
+}
+
+/* ── STEPS ── */
+.steps {
+  counter-reset: step;
+  list-style: none;
+  margin: 16px 0 24px;
+}
+
+.steps li {
+  counter-increment: step;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(200, 169, 110, 0.3);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.steps li:last-child { border-bottom: none; }
+
+.steps li::before {
+  content: counter(step);
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--bb-5);
+  color: var(--bb-8);
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+/* ── CALLOUTS ── */
+blockquote {
+  border-left: 4px solid var(--bb-4);
+  padding: 14px 18px 14px 22px;
+  margin: 24px 0;
+  background: rgba(232, 160, 32, 0.08);
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+  font-style: italic;
+}
+
+aside {
+  border-left: 4px solid var(--bb-3);
+  padding: 14px 18px 14px 22px;
+  margin: 24px 0;
+  background: rgba(192, 57, 43, 0.06);
+  border-radius: 0 4px 4px 0;
+}
+
+.aside-label {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bb-3);
+  margin-bottom: 6px;
+}
+
+aside p { font-size: 14px; line-height: 1.65; margin: 0; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; margin: 20px 0 28px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead tr {
+  background: rgba(200, 169, 110, 0.2);
+  border-bottom: 2px solid var(--bb-7);
+}
+
+th {
+  text-align: left;
+  padding: 10px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bb-5);
+  font-weight: 600;
+}
+
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(200, 169, 110, 0.3);
+  vertical-align: top;
+  line-height: 1.55;
+}
+
+tr:last-child td { border-bottom: none; }
+
+td:first-child code { font-size: 12px; }
+
+/* ── QUALITY BADGES ── */
+.badge {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.badge-featured { background: var(--bb-4); color: var(--bb-1); }
+.badge-community { background: rgba(200, 169, 110, 0.3); color: var(--bb-6); }
+.badge-curated { background: var(--bb-5); color: var(--bb-8); }
+
+/* ── SECTION DIVIDER ── */
+hr {
+  border: none;
+  border-top: 1px solid var(--bb-7);
+  margin: 40px 0;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--bb-7);
+  padding: 24px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--bb-6);
+  letter-spacing: 0.04em;
+}
+
+footer a { color: var(--bb-5); text-decoration: none; }
+footer a:hover { color: var(--bb-2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .body-wrap { grid-template-columns: 1fr; gap: 0; }
+  .sidebar { display: none; }
+  nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="wordmark">boondoggling.ai</span>
+  <nav>
+    <a href="/admin/dashboard">Admin</a>
+    <a href="/tools">Tools</a>
+    <a href="/dev">Dev</a>
+  </nav>
+</header>
+
+<div class="body-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" style="border:none;background:none;padding:40px 0 80px;">
+    <p class="sidebar-label">Contents</p>
+    <nav>
+      <a href="#getting-in">Getting in</a>
+      <a href="#blog">Blog posts</a>
+      <a href="#videos">Videos</a>
+      <a href="#tools">Tools</a>
+      <a href="#dev">Dev docs</a>
+      <a href="#quality">Quality signals</a>
+      <a href="#audit">Doc audit</a>
+      <a href="#frick-fracking">Frick-fracking</a>
+      <a href="#env">Env variables</a>
+      <a href="#deployments">Deployments</a>
+      <a href="#database">Database</a>
+      <a href="#blob">Vercel Blob</a>
+      <a href="#no-redeploy">No-redeploy rule</a>
+      <a href="#monitoring">Monitoring</a>
+      <a href="#noodling">Noodling</a>
+    </nav>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <header class="article-header">
+      <p class="article-label">Internal · Site Operations</p>
+      <h1>boondoggling.ai — Owner's Guide</h1>
+      <p class="deck">What you need to know to run the site — from publishing content to making architectural changes the right way.</p>
+      <p class="dateline">March 30, 2026</p>
+    </header>
+
+    <!-- GETTING IN -->
+    <section id="getting-in">
+      <h2>Getting In</h2>
+      <p>Admin login: <code>https://www.boondoggling.ai/admin/login</code><br>
+      Password is set in the Vercel dashboard as the <code>ADMIN_PASSWORD</code> environment variable. Sessions last 7 days.</p>
+      <blockquote><p>If you get logged out mid-edit, your blog post draft is in <code>sessionStorage</code> — it survives the redirect to login. Log back in and it will still be there.</p></blockquote>
+    </section>
+
+    <!-- BLOG -->
+    <section id="blog">
+      <h2>Publishing Content</h2>
+      <h3>Blog Post</h3>
+      <ol class="steps">
+        <li><code>/admin/dashboard/blog</code> → New Post</li>
+        <li>Write in the Tiptap editor. Upload cover image via the toolbar.</li>
+        <li>Add tags. Set slug (auto-generated from title — edit if needed).</li>
+        <li>Save Draft → Preview → Publish.</li>
+        <li>Post appears on <code>/blog</code> immediately on next page load. No redeploy.</li>
+      </ol>
+    </section>
+
+    <!-- VIDEOS -->
+    <section id="videos">
+      <h3>Video</h3>
+      <ol class="steps">
+        <li><code>/admin/dashboard/videos</code> → New Video</li>
+        <li>For YouTube: paste the video ID (the part after <code>?v=</code> — e.g., <code>dQw4w9WgXcQ</code>).</li>
+        <li>For uploaded video: upload an MP4/WebM (max 500MB) — it goes to Vercel Blob.</li>
+        <li>Add title, description, tags. Pin it to surface it at the top.</li>
+        <li>Publish. Appears on <code>/videos</code> immediately.</li>
+      </ol>
+    </section>
+
+    <!-- TOOLS -->
+    <section id="tools">
+      <h3>Tool (System Prompt)</h3>
+      <ol class="steps">
+        <li><code>/admin/dashboard/tools</code> → New Tool</li>
+        <li>Set <code>tool_type</code> to <code>prompt</code>.</li>
+        <li>Paste the full system prompt into <code>prompt_text</code>.</li>
+        <li>Set <code>quality_signal</code> to <code>curated</code>.</li>
+        <li>Set <code>version</code> (e.g., <code>1.0</code>).</li>
+        <li>Write a one-paragraph description: what it does, who it's for, how to install it.</li>
+        <li>Publish. Appears on <code>/tools</code> immediately.</li>
+      </ol>
+      <aside style="border:none;background:none;padding:0;border-left:4px solid var(--bb-3);padding:14px 18px 14px 22px;background:rgba(192,57,43,0.06);border-radius:0 4px 4px 0;margin:16px 0;">
+        <p class="aside-label">Updating an existing tool</p>
+        <p>Edit the entry → update <code>prompt_text</code> → increment <code>version</code> → save. The old version is gone. To preserve it, create a new entry with a versioned slug (e.g., <code>gru-v1</code>).</p>
+      </aside>
+    </section>
+
+    <!-- DEV DOCS -->
+    <section id="dev">
+      <h3>Community SDD Doc (/dev)</h3>
+      <ol class="steps">
+        <li>Receive submission via email or DM.</li>
+        <li><code>/admin/dashboard/dev</code> → Upload Draft → select the HTML file.</li>
+        <li>Fill in: title, slug, description, category (WWW / Agents / Games), <code>submitted_by</code> (name/handle — no email).</li>
+        <li>Click "Upload Draft." File goes to Vercel Blob. Draft record appears in the queue.</li>
+        <li><strong>Run the doc audit before publishing</strong> — see the Audit section below.</li>
+        <li>In the draft queue, click "Publish." Set <code>quality_signal</code>, add <code>build_url</code> if provided, paste the audit report into the notes field.</li>
+      </ol>
+
+      <h3>Nik-authored /dev docs</h3>
+      <p>Drop the HTML file into the correct subdirectory, commit, and push. Vercel rebuilds in ~1 minute.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Path</th></tr></thead>
+          <tbody>
+            <tr><td>Website SDDs</td><td><code>/public/dev/WWW/gru/</code></td></tr>
+            <tr><td>Agentic SDDs</td><td><code>/public/dev/Agents/gru/</code></td></tr>
+            <tr><td>Game SDDs</td><td><code>/public/dev/Games/gru/</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Files in <code>/gru/</code> subfolders automatically get the "Built with Gru" badge. The HTML file needs two tags and the scanner does the rest:</p>
+      <pre><code>&lt;title&gt;Your Project Name&lt;/title&gt;
+&lt;meta name="description" content="One sentence about what this build is."&gt;</code></pre>
+
+      <h3>Adding a new category</h3>
+      <pre><code>mkdir -p public/dev/NewCategory/gru</code></pre>
+      <p>Add at least one HTML file, commit, and push. The new category appears on <code>/dev</code> on the next deploy. No code change required.</p>
+    </section>
+
+    <hr>
+
+    <!-- QUALITY SIGNALS -->
+    <section id="quality">
+      <h2>Quality Signals</h2>
+      <p>Every <code>/dev</code> doc and <code>/tools</code> entry carries a quality signal visible on its card.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Signal</th><th>Meaning</th><th>Who sets it</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-featured">Featured</span></td>
+              <td>Admin-reviewed, methodology-sound, recommended for new learners</td>
+              <td>Admin only</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-community">Community</span></td>
+              <td>Submitted, audited, published as-is</td>
+              <td>Default for all submissions</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-curated">Curated</span></td>
+              <td>Admin-authored tool, canonical</td>
+              <td>Admin only (tools)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>To change a quality signal: edit the entry in the admin dashboard. Updates immediately on next page load.</p>
+    </section>
+
+    <hr>
+
+    <!-- DOC AUDIT -->
+    <section id="audit">
+      <h2>Running the Doc Audit</h2>
+      <p>Every community submission should go through the audit before publishing. The audit tool lives at <code>/tools</code> — find "Admin: Doc Audit Prompt."</p>
+      <ol class="steps">
+        <li>Open <code>/tools/admin-doc-audit-prompt</code> and copy the prompt.</li>
+        <li>Open a new Claude Project (or fresh conversation). Paste the prompt into Project Instructions.</li>
+        <li>Paste the submitted HTML content into the conversation.</li>
+        <li>Read the audit report — it flags missing sections, methodology errors, incomplete Boondoggle Scores, and quality signal recommendation.</li>
+        <li>Decide: publish as Featured, publish as Community, return with feedback, or decline.</li>
+        <li>Paste the audit report into the "Audit report" notes field in the admin dashboard before publishing.</li>
+      </ol>
+      <blockquote><p>The audit is not a technical gate — it is your judgment call after reading the report. The tool assists. You decide.</p></blockquote>
+    </section>
+
+    <hr>
+
+    <!-- FRICK-FRACKING -->
+    <section id="frick-fracking">
+      <h2>Making Changes to the Site (Frick-Fracking)</h2>
+      <p>For small changes — a layout tweak, a copy edit, a new edge case that surfaced:</p>
+      <ol class="steps">
+        <li>Open Claude Code (or Claude.ai with the codebase in context).</li>
+        <li>Name the change in one sentence. Include: what file, what behavior currently, what behavior needed.</li>
+        <li>If the change touches architecture (new DB column, new API route, new component), check it against the SDD first. One minute. Worth it.</li>
+        <li>Run the prompt. Verify the output. Ship.</li>
+      </ol>
+      <aside style="border:none;background:none;padding:0;border-left:4px solid var(--bb-3);padding:14px 18px 14px 22px;background:rgba(192,57,43,0.06);border-radius:0 4px 4px 0;margin:16px 0;">
+        <p class="aside-label">SDD first</p>
+        <p>For anything that changes the data model, adds a new route, or modifies the admin dashboard: run the relevant SDD section first to update the design document before updating the code. The SDD governs implementation — not the other way around.</p>
+      </aside>
+    </section>
+
+    <hr>
+
+    <!-- ENV VARIABLES -->
+    <section id="env">
+      <h2>Environment Variables</h2>
+      <p>Set in Vercel dashboard → Project → Settings → Environment Variables. Never commit these to git — they live in <code>.env.local</code> for local development only.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>What it is</th><th>Where to find it</th></tr></thead>
+          <tbody>
+            <tr><td><code>DATABASE_URL</code></td><td>Neon connection string</td><td>Neon dashboard → Connection Details</td></tr>
+            <tr><td><code>ADMIN_PASSWORD</code></td><td>Your admin login password</td><td>You set this</td></tr>
+            <tr><td><code>BLOB_READ_WRITE_TOKEN</code></td><td>Vercel Blob access token</td><td>Vercel dashboard → Storage → Blob</td></tr>
+            <tr><td><code>NEXT_PUBLIC_SITE_URL</code></td><td><code>https://www.boondoggling.ai</code></td><td>Hardcoded value</td></tr>
+            <tr><td><code>NEXT_PUBLIC_GA_ID</code></td><td>Google Analytics ID (optional)</td><td>Google Analytics dashboard</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- DEPLOYMENTS -->
+    <section id="deployments">
+      <h2>Deployments</h2>
+      <p><strong>Automatic:</strong> push to <code>main</code> → Vercel builds → new deployment goes live in ~1 minute. Previous deployment stays live during the build.</p>
+      <p><strong>Rollback:</strong> Vercel dashboard → Deployments → click any previous deployment → Redeploy. Instant. No DB rollback needed for code-only changes.</p>
+      <p><strong>When a deploy fails:</strong> previous deployment stays live. Check Vercel dashboard for build error. Fix locally, push again.</p>
+    </section>
+
+    <hr>
+
+    <!-- DATABASE -->
+    <section id="database">
+      <h2>Database (Neon)</h2>
+      <p><strong>Backups:</strong> Neon Pro plan runs automated backups with point-in-time recovery. Use Neon dashboard → Branches → Restore if something goes wrong.</p>
+      <p><strong>Running SQL directly:</strong> Neon dashboard → SQL Editor. Useful for one-off fixes, backfills, or checking table state.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Table</th><th>Contains</th></tr></thead>
+          <tbody>
+            <tr><td><code>blog_posts</code></td><td>Blog content</td></tr>
+            <tr><td><code>tools</code></td><td>Prompt library — includes <code>prompt_text</code>, <code>quality_signal</code>, <code>version</code></td></tr>
+            <tr><td><code>videos</code></td><td>Video library</td></tr>
+            <tr><td><code>dev_docs</code></td><td>Community-submitted SDD docs (Blob-stored HTML)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- BLOB -->
+    <section id="blob">
+      <h2>Vercel Blob</h2>
+      <p>Blob stores blog cover images, uploaded course videos, and community HTML files.</p>
+      <p><strong>To view stored files:</strong> Vercel dashboard → Storage → Blob → browse.</p>
+      <p><strong>Orphaned files</strong> accumulate when an upload succeeds but the DB insert fails. They are not publicly accessible. Clean them up periodically by comparing Blob file names against <code>dev_docs</code> slugs — delete anything with no matching record.</p>
+      <p><strong>To delete a file manually:</strong> Vercel Blob dashboard → find file → delete. Also delete the corresponding <code>dev_docs</code> record in Neon if one exists.</p>
+    </section>
+
+    <hr>
+
+    <!-- NO-REDEPLOY RULE -->
+    <section id="no-redeploy">
+      <h2>What Requires a Redeploy</h2>
+      <p>Only one thing requires a git commit and push (and a ~1 minute Vercel rebuild):</p>
+      <blockquote><p>Adding Nik-authored HTML files to <code>/public/dev/</code> or <code>/public/tools/</code></p></blockquote>
+      <p>Everything else — publishing blog posts, tools, videos, dev docs, changing quality signals — happens through the admin dashboard with no redeploy.</p>
+    </section>
+
+    <hr>
+
+    <!-- MONITORING -->
+    <section id="monitoring">
+      <h2>Monitoring</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>What</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td>Traffic</td><td>Vercel → your project → Analytics tab</td></tr>
+            <tr><td>Server errors</td><td>Vercel → your project → Functions tab</td></tr>
+            <tr><td>YouTube videos gone private or deleted</td><td>Periodically browse <code>/videos</code> and look for embed errors. Delete from admin if found.</td></tr>
+            <tr><td>Dead build links on /dev</td><td>Periodically scan <code>/dev</code> docs with <code>build_url</code> set and verify they still resolve. Update or remove in admin.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- NOODLING -->
+    <section id="noodling">
+      <h2>Noodling (New Features)</h2>
+      <p>When a new idea surfaces — a feature, a new tool, a new <code>/dev</code> category, a change to how the site teaches:</p>
+      <ol class="steps">
+        <li>Write it in one sentence: "I want [feature] for [who] so that [outcome]."</li>
+        <li>Check the SDD P2 (out-of-scope). Is it explicitly excluded? If so, name why before proceeding.</li>
+        <li>If it passes: run <code>/v1</code> with Gru to define it properly before building anything.</li>
+        <li>If it's small enough (new blog post, new tool entry, new <code>/dev</code> category): skip the SDD, frick-frack it.</li>
+        <li>If it's large enough to change the architecture, add a new route, or touch the DB schema: it gets its own SDD section before it gets code.</li>
+      </ol>
+      <blockquote><p>"Could this break something that already works?" If yes — SDD first. If no — frick-frack.</p></blockquote>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  Built with <a href="https://www.bearbrown.co">bearbrown.co</a> · AI tools for educators, creators &amp; founders
+</footer>
+
+<script>
+// Highlight active sidebar section on scroll
+const sections = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('.sidebar nav a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.sidebar nav a[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>

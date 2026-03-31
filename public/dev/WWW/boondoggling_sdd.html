@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boondoggling.ai — Software Design Document</title>
+  <meta name="description" content="The complete Software Design Document for boondoggling.ai — a hybrid learning platform and prompt library for developers who use Claude. Covers all phases: problem intake, architecture principles, user flows, component documentation, API contracts, data model, risk register, and open questions log. Produced with Gru.">
+  <meta name="keywords" content="software design document, SDD, boondoggling, boondoggling.ai, Gru, Claude, AI methodology, Next.js, architecture, prompt library">
+  <meta name="date" content="2026-03-30">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bb-1: #1a0a00;
+      --bb-2: #8B3A0F;
+      --bb-3: #C0392B;
+      --bb-4: #E8A020;
+      --bb-5: #D4500A;
+      --bb-6: #B8860B;
+      --bb-7: #C8A96E;
+      --bb-8: #F0E6D0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bb-8); color: var(--bb-1); font-size: 16px; line-height: 1.75; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; background: var(--bb-1); z-index: 200; border-bottom: 3px solid var(--bb-2); }
+    .nav-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 52px; }
+    .nav-brand { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 700; color: var(--bb-4); text-transform: uppercase; letter-spacing: 0.12em; text-decoration: none; }
+    .nav-tag { font-family: 'Courier New', monospace; font-size: 10px; color: var(--bb-7); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* SIDEBAR TOC */
+    .layout { display: flex; align-items: flex-start; max-width: 1080px; margin: 0 auto; padding: 0 24px; gap: 40px; }
+    .toc {
+      position: sticky; top: 67px; width: 200px; flex-shrink: 0;
+      padding: 20px 0; font-size: 0.78rem; max-height: calc(100vh - 80px); overflow-y: auto;
+    }
+    .toc-title { font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--bb-6); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--bb-7); }
+    .toc a { display: block; color: var(--bb-6); text-decoration: none; padding: 3px 0; line-height: 1.4; transition: color 0.1s; }
+    .toc a:hover { color: var(--bb-2); }
+    .toc a.sub { padding-left: 10px; font-size: 0.73rem; }
+    @media (max-width: 800px) { .toc { display: none; } .layout { padding: 0; } }
+
+    /* PAGE */
+    .page { flex: 1; min-width: 0; padding: 0 0 80px; max-width: 720px; }
+
+    /* HERO */
+    .hero { padding: 48px 24px 36px; border-bottom: 1px solid var(--bb-7); margin-bottom: 0; }
+    .hero-eyebrow { font-family: 'Courier New', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--bb-5); margin-bottom: 10px; }
+    h1 { font-size: 1.8rem; font-weight: 700; color: var(--bb-2); line-height: 1.2; margin-bottom: 10px; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
+    .meta-item { font-family: 'Courier New', monospace; font-size: 10px; color: var(--bb-6); }
+    .meta-item strong { color: var(--bb-1); }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .badge { font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 3px; background: var(--bb-1); color: var(--bb-8); }
+    .badge.accent { background: var(--bb-2); }
+    .badge.gold { background: var(--bb-6); }
+    .badge.green { background: #2d6a2d; }
+
+    /* SECTIONS */
+    .section { padding: 36px 24px; border-bottom: 1px solid var(--bb-7); }
+    .section:last-of-type { border-bottom: none; }
+    h2 { font-size: 1.1rem; font-weight: 700; color: var(--bb-2); margin-bottom: 16px; display: flex; align-items: baseline; gap: 10px; }
+    .section-num { font-family: 'Courier New', monospace; font-size: 10px; color: var(--bb-7); font-weight: 400; }
+    h3 { font-size: 0.95rem; font-weight: 600; color: var(--bb-1); margin: 22px 0 8px; }
+    p { margin-bottom: 12px; font-size: 0.92rem; }
+
+    /* CALLOUT / ASIDE */
+    blockquote { border-left: 4px solid var(--bb-4); padding: 12px 18px; margin: 18px 0; background: rgba(232,160,32,0.07); border-radius: 0 4px 4px 0; font-size: 0.9rem; }
+    blockquote strong { display: block; font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bb-6); margin-bottom: 4px; }
+    aside { border-left: 4px solid var(--bb-3); padding: 12px 18px; margin: 18px 0; background: rgba(192,57,43,0.06); border-radius: 0 4px 4px 0; font-size: 0.9rem; }
+    aside strong { display: block; font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bb-3); margin-bottom: 4px; }
+
+    /* PRINCIPLE CARDS */
+    .principle { border: 1px solid var(--bb-7); border-radius: 4px; padding: 16px 18px; background: #fff; margin-bottom: 14px; border-top: 3px solid var(--bb-2); }
+    .principle-name { font-family: 'Courier New', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bb-2); margin-bottom: 8px; font-weight: 700; }
+    .principle-body { font-size: 0.88rem; color: var(--bb-1); line-height: 1.65; }
+    .principle-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    @media (max-width: 560px) { .principle-rows { grid-template-columns: 1fr; } }
+    .principle-row-item { background: var(--bb-8); border-radius: 3px; padding: 8px 10px; font-size: 0.82rem; }
+    .principle-row-label { font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+    .principle-row-item.honors .principle-row-label { color: #2d6a2d; }
+    .principle-row-item.violates .principle-row-label { color: var(--bb-3); }
+    .principle-row-item.failure { grid-column: 1 / -1; }
+    .principle-row-item.failure .principle-row-label { color: var(--bb-5); }
+
+    /* FLOW BLOCKS */
+    .flow-block { background: var(--bb-1); border-radius: 4px; padding: 16px 18px; margin: 14px 0; }
+    .flow-block pre { font-family: 'Courier New', monospace; font-size: 11px; color: var(--bb-8); white-space: pre-wrap; word-break: break-word; line-height: 1.8; }
+    .flow-label { font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bb-7); margin-bottom: 8px; }
+
+    /* NEED CARDS */
+    .need { border: 1px solid var(--bb-7); border-radius: 4px; padding: 14px 16px; background: #fff; margin-bottom: 10px; }
+    .need-id { font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700; color: var(--bb-5); margin-bottom: 5px; }
+    .need-body { font-size: 0.88rem; color: var(--bb-1); line-height: 1.65; }
+    .need-test { font-size: 0.82rem; color: var(--bb-6); margin-top: 6px; font-style: italic; }
+
+    /* COMPONENT CARDS */
+    .component { border: 1px solid var(--bb-7); border-radius: 4px; padding: 16px 18px; background: #fff; margin-bottom: 14px; }
+    .component-title { font-size: 0.93rem; font-weight: 600; color: var(--bb-2); margin-bottom: 6px; }
+    .component-needs { font-family: 'Courier New', monospace; font-size: 9px; color: var(--bb-6); margin-bottom: 8px; }
+    .component-body { font-size: 0.87rem; color: var(--bb-1); line-height: 1.65; }
+    .scope-tag { display: inline-block; font-family: 'Courier New', monospace; font-size: 9px; padding: 2px 7px; border-radius: 2px; background: rgba(192,57,43,0.1); color: var(--bb-3); margin-top: 8px; }
+
+    /* TABLES */
+    .tbl-wrap { overflow-x: auto; margin: 14px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    thead tr { background: var(--bb-1); color: var(--bb-8); }
+    thead th { font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; padding: 9px 12px; text-align: left; font-weight: 600; }
+    tbody tr { border-bottom: 1px solid var(--bb-7); }
+    tbody tr:nth-child(even) { background: rgba(200,169,110,0.1); }
+    td { padding: 8px 12px; vertical-align: top; line-height: 1.5; }
+    td:first-child { font-family: 'Courier New', monospace; font-size: 11px; color: var(--bb-5); white-space: nowrap; }
+
+    /* RISK LEVELS */
+    .risk-high { color: var(--bb-3); font-weight: 600; }
+    .risk-med { color: var(--bb-5); }
+    .risk-low { color: var(--bb-6); }
+
+    /* CODE */
+    code { font-family: 'Courier New', monospace; font-size: 0.85em; background: rgba(200,169,110,0.2); padding: 1px 4px; border-radius: 2px; }
+    pre.code-block { background: var(--bb-1); border-radius: 4px; padding: 16px 18px; overflow-x: auto; margin: 14px 0; }
+    pre.code-block code { background: none; padding: 0; font-size: 11px; color: var(--bb-8); white-space: pre; line-height: 1.7; }
+
+    /* CHECKLIST */
+    .checklist { list-style: none; padding: 0; margin: 12px 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; padding: 5px 0; border-bottom: 1px solid rgba(200,169,110,0.3); }
+    .checklist li:last-child { border-bottom: none; }
+    .check-box { width: 14px; height: 14px; border: 1.5px solid var(--bb-7); border-radius: 2px; flex-shrink: 0; margin-top: 4px; }
+
+    /* STATUS BADGE */
+    .status-ready { display: inline-block; background: rgba(45,106,45,0.12); color: #2d6a2d; border: 1px solid rgba(45,106,45,0.3); font-family: 'Courier New', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 3px; }
+
+    /* OQ CARD */
+    .oq-card { border: 1px solid var(--bb-7); border-radius: 4px; padding: 14px 16px; background: #fff; border-left: 4px solid var(--bb-4); }
+    .oq-id { font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700; color: var(--bb-6); margin-bottom: 5px; }
+
+    /* MVS BLOCK */
+    .mvs-block { border-left: 4px solid var(--bb-2); padding: 14px 18px; margin: 14px 0; background: rgba(139,58,15,0.06); border-radius: 0 4px 4px 0; font-size: 0.9rem; }
+    .mvs-label { font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bb-5); margin-bottom: 6px; }
+
+    footer { max-width: 720px; margin: 0 auto; padding: 24px 24px 40px; border-top: 1px solid var(--bb-7); font-size: 0.82rem; color: var(--bb-6); text-align: center; }
+    footer a { color: var(--bb-2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://www.bearbrown.co">bearbrown.co</a>
+    <span class="nav-tag">Software Design Document</span>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- TOC -->
+  <aside class="toc" style="border: none; background: none; padding: 28px 0; margin: 0;">
+    <div class="toc-title">Contents</div>
+    <a href="#s1">1. Problem Summary</a>
+    <a href="#s2">2. Architecture Principles</a>
+    <a href="#s3">3. Core User Flows</a>
+    <a href="#s4">4. User &amp; Business Needs</a>
+    <a href="#s5">5. Component Documentation</a>
+    <a href="#s6">6. Integrations</a>
+    <a href="#s7">7. Data Architecture</a>
+    <a href="#s8">8. Domain Model</a>
+    <a href="#s9">9. API Contracts</a>
+    <a href="#s10">10. Data Flows</a>
+    <a href="#s11">11. Component List + MVS</a>
+    <a href="#s12">12. Out of Scope</a>
+    <a href="#s13">13. Infrastructure</a>
+    <a href="#s14">14. Risk Register</a>
+    <a href="#s15">15. Open Questions</a>
+    <a href="#s16">16. Document Metadata</a>
+  </aside>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <header class="hero">
+      <p class="hero-eyebrow">Software Design Document · v1.0</p>
+      <h1>Boondoggling.ai</h1>
+      <div class="hero-meta">
+        <span class="meta-item"><strong>Version:</strong> 1.0 — First complete draft</span>
+        <span class="meta-item"><strong>Date:</strong> March 30, 2026</span>
+        <span class="meta-item"><strong>Owner:</strong> Nik Bear Brown / Bear Brown &amp; Company / Musinique LLC</span>
+        <span class="meta-item"><strong>Produced with:</strong> Gru (Ada + Boondoggling layer)</span>
+      </div>
+      <div class="badge-row" style="margin-bottom: 14px;">
+        <span class="badge green">Ready to Govern Implementation</span>
+        <span class="badge accent">V1–V4 Complete</span>
+        <span class="badge accent">S1–S4 Complete</span>
+        <span class="badge accent">D1–D3 Complete</span>
+        <span class="badge accent">P1–P5 Complete</span>
+        <span class="badge gold">1 Open Question (Non-Blocking)</span>
+      </div>
+      <div style="font-size: 0.85rem; color: var(--bb-6);">v0.1–v0.17 produced through phase-gated intake with Gru. v1.0 is the compiled full document. Changelog maintained in working document.</div>
+    </header>
+
+    <!-- SECTION 1 -->
+    <section class="section" id="s1">
+      <h2><span class="section-num">01</span> One-Page Problem Summary</h2>
+      <p>This system is a <strong>hybrid learning platform and prompt library</strong> for <strong>developers and technical creators who use Claude regularly but have never encountered structured AI-assisted build methodology</strong>, that solves <strong>the absence of a guided, practice-based path from "I use Claude" to "I conduct Claude"</strong> through a scrolling homepage that tells the story of boondoggling from first principles, a /dev section of real annotated Gru projects as worked examples, a /tools prompt library where Gru and companion tools can be copied into any Claude Project, and video instruction throughout.</p>
+      <p>It occupies the space between a methodology explainer (reads but can't practice) and a raw Claude conversation (can practice but teaches nothing).</p>
+      <blockquote>
+        <strong>Success Condition</strong>
+        A developer who uses Claude daily arrives, understands the solve-verify asymmetry, copies the Gru system prompt, runs it locally, and completes a real build using the methodology — without needing to ask anyone how.
+      </blockquote>
+      <aside>
+        <strong>What This System Is Not</strong>
+        A prompt engineering tutorial site · An LMS · An on-site Claude interface · A course platform with locked modules
+      </aside>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="section" id="s2">
+      <h2><span class="section-num">02</span> Architecture Principles</h2>
+
+      <div class="principle">
+        <div class="principle-name">Principle 1 — Teaching Outcome Over Feature</div>
+        <div class="principle-body">Every component earns its place by advancing the learner toward running a Gru build independently. If it doesn't, it doesn't ship.</div>
+        <div class="principle-rows">
+          <div class="principle-row-item honors"><div class="principle-row-label">Honors</div>A video that walks through a real Boondoggle Score step by step.</div>
+          <div class="principle-row-item violates"><div class="principle-row-label">Violates</div>An animated section visualizing the five supervisory capacities without connecting them to a concrete action.</div>
+          <div class="principle-row-item failure"><div class="principle-row-label">Production Failure State</div>The site becomes a brand site for boondoggling instead of a platform that produces boondogglers.</div>
+        </div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-name">Principle 2 — YouTube + Substack, Not Textbook</div>
+        <div class="principle-body">Teaching happens in video and in writing that reads like a person thinking out loud. The site points to content; it does not replace it.</div>
+        <div class="principle-rows">
+          <div class="principle-row-item honors"><div class="principle-row-label">Honors</div>A blog post that works through one specific failure in a Boondoggle Score.</div>
+          <div class="principle-row-item violates"><div class="principle-row-label">Violates</div>A "Course" section with locked modules and progress tracking.</div>
+          <div class="principle-row-item failure"><div class="principle-row-label">Production Failure State</div>The site drifts toward LMS territory. Content becomes obligation rather than destination.</div>
+        </div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-name">Principle 3 — Audit Before Publish, Tool-Assisted</div>
+        <div class="principle-body">No community-contributed content goes live without a structured quality review. The audit tool runs locally in the admin's Claude Project. The publish decision is the admin's judgment call.</div>
+        <div class="principle-rows">
+          <div class="principle-row-item honors"><div class="principle-row-label">Honors</div>Every /dev submission goes through the Doc Audit Prompt before publish.</div>
+          <div class="principle-row-item violates"><div class="principle-row-label">Violates</div>Publishing any doc that arrives because volume feels better than quality.</div>
+          <div class="principle-row-item failure"><div class="principle-row-label">Production Failure State</div>/dev fills with incomplete SDDs that teach bad habits.</div>
+        </div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-name">Principle 4 — Identical Stack, No Exceptions</div>
+        <div class="principle-body">Every technical decision defers to the Musinique codebase. Same patterns, same components, same deployment model.</div>
+        <div class="principle-rows">
+          <div class="principle-row-item honors"><div class="principle-row-label">Honors</div>Porting the Musinique /dev filesystem pattern directly.</div>
+          <div class="principle-row-item violates"><div class="principle-row-label">Violates</div>Introducing a new ORM or auth library.</div>
+          <div class="principle-row-item failure"><div class="principle-row-label">Production Failure State</div>Two codebases that drift apart. A solo developer maintaining two divergent infrastructure patterns.</div>
+        </div>
+      </div>
+
+      <h3>Principle Collision Resolutions</h3>
+      <p style="font-size:0.88rem;">P1 vs. P3: P3 is primary at the publish gate. P1 is primary for content already live-and-teaching. P2 vs. P1: P2 is primary on format. P1 is primary on outcome. Recommended watch order is surfaced as a suggestion, not a gate.</p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="section" id="s3">
+      <h2><span class="section-num">03</span> Core User Flows + System Interaction Map</h2>
+
+      <h3>Flow 1 — Learner's First Run (Primary)</h3>
+      <div class="flow-block">
+        <div class="flow-label">Happy Path</div>
+        <pre>LEARNER ARRIVES AT /
+├── BEAT 1: What is boondoggling? (conductor metaphor, solve-verify asymmetry)
+├── BEAT 2: Why does it matter? (five supervisory capacities)
+├── BEAT 3: How does it work? → links to /videos for depth
+├── BEAT 4: Get the tool → /tools → copy Gru → paste into Claude Project
+└── BEAT 5: See it in action → /dev worked examples, /videos</pre>
+      </div>
+      <blockquote>
+        <strong>Flow Honesty Test</strong>
+        If this flow were a command-line prototype — just a README and a copy-paste prompt — would it solve the stated problem? Yes. The site is a surfacing layer, not the core value.
+      </blockquote>
+
+      <h3>Flow 2 — Tools and Worked Examples (Returning Learner)</h3>
+      <div class="flow-block">
+        <pre>/tools → browse card grid → tool detail page → copy prompt → paste into Claude Project
+/dev   → browse card grid (category-grouped) → open doc → read SDD in sandboxed iframe
+         → optional: navigate to real build (external link)</pre>
+      </div>
+
+      <h3>Flow 3 — Admin Submission-to-Publish</h3>
+      <div class="flow-block">
+        <pre>Submission arrives (email/DM)
+→ Admin creates draft in dashboard
+→ Admin runs Doc Audit Prompt locally (Claude Project)
+→ Decision: publish / return for revision / decline
+→ Published: quality signal set, category assigned, doc visible in /dev</pre>
+      </div>
+
+      <h3>System Interaction Map</h3>
+      <div class="flow-block">
+        <pre>EXTERNAL              BOONDOGGLING.AI           LEARNER'S LOCAL ENV
+────────              ───────────────           ───────────────────
+YouTube          ←──  /videos
+Vercel Blob      ←──  /dev (community uploads)   Claude.ai /
+                 ←──  /blog (cover images)        Claude Code
+Neon PostgreSQL  ←──  blog_posts                     │
+                 ←──  tools                    ← Gru system prompt
+                 ←──  videos                     (copied from /tools)
+                 ←──  dev_docs
+Vercel           ←──  deploy on push to main</pre>
+      </div>
+      <p style="font-size:0.87rem; color: var(--bb-6);">Single point of failure: Vercel (full site). All other dependencies degrade gracefully. Core teaching path (prompt copy) survives failure of every integration except Vercel.</p>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="section" id="s4">
+      <h2><span class="section-num">04</span> User and Business Needs</h2>
+
+      <h3>User Needs</h3>
+      <div class="need">
+        <div class="need-id">UN-1 — First-Time Learner Comprehension</div>
+        <div class="need-body">A new learner must be able to understand what boondoggling is and why it changes how they build with Claude, when arriving for the first time, without reading a wall of documentation before the concept lands.</div>
+        <div class="need-test">Test: reads first two homepage sections, can state the solve-verify asymmetry in their own words.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">UN-2 — Zero-Friction Tool Access</div>
+        <div class="need-body">A learner must be able to copy the Gru system prompt and have it running in a Claude Project, when ready to try it, without leaving the site to find instructions, create an account, or wait for access.</div>
+        <div class="need-test">Test: time from "I want to try this" to Gru running in a Claude Project is under three minutes.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">UN-3 — Real Worked Examples</div>
+        <div class="need-body">A learner must be able to study a complete, real Gru SDD project — including the Boondoggle Score — without the example being synthetic, incomplete, or stripped of decisions.</div>
+        <div class="need-test">Test: can identify Problem Summary, at least one architecture principle, and one Boondoggle Score step with its handoff condition.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">UN-4 — Video Depth</div>
+        <div class="need-body">A learner must be able to go deeper on any concept through video, when reading is not enough, without the video being buried or disconnected from the concept it teaches.</div>
+        <div class="need-test">Test: can reach a video explaining the five supervisory capacities in one click from the homepage.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">UN-5 — Fast Reference</div>
+        <div class="need-body">A returning learner must be able to find a specific concept, command, or worked example quickly, when mid-build and needing a reference, without re-reading the whole site.</div>
+        <div class="need-test">Test: can find the definition of a handoff condition and an example in under sixty seconds.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">UN-6 — Community Contribution</div>
+        <div class="need-body">A practitioner who has completed a real Gru build must be able to submit their SDD as a worked example without needing a GitHub account or technical knowledge beyond what they used to build.</div>
+        <div class="need-test">Test: can submit and receive publish confirmation or specific audit feedback within one admin review cycle.</div>
+      </div>
+
+      <h3>Operator Needs</h3>
+      <div class="need">
+        <div class="need-id">ON-1</div>
+        <div class="need-body">Operator must be able to publish blog posts, add tools, upload videos, and add /dev docs without touching the codebase or redeploying.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">ON-2</div>
+        <div class="need-body">Operator must be able to review a community submission, run the audit prompt locally, and make a publish/return/decline decision using only the admin dashboard and a local Claude Project.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">ON-3</div>
+        <div class="need-body">Operator must be able to assign and update quality signals (Featured / Community) on /dev docs and /tools entries without a code change.</div>
+      </div>
+
+      <h3>Business Needs</h3>
+      <div class="need">
+        <div class="need-id">BN-1 — Demonstrated Real Builds</div>
+        <div class="need-body">The site must demonstrate that boondoggling produces real, finished builds — not just theory. Every Featured /dev doc links to a verifiable external build.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">BN-2 — Growing Library</div>
+        <div class="need-body">The site must grow the library of Gru variants and companion tools over time through community contribution.</div>
+      </div>
+      <div class="need">
+        <div class="need-id">BN-3 — Bear Brown Brand Consistency</div>
+        <div class="need-body">The site must feel like a Bear Brown &amp; Company property — same visual language, same technical patterns as Musinique.</div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section class="section" id="s5">
+      <h2><span class="section-num">05</span> Core Component Documentation</h2>
+
+      <div class="component">
+        <div class="component-title">Component 1 — Homepage Scroll Arc</div>
+        <div class="component-needs">Needs: UN-1, UN-2, UN-4, BN-1</div>
+        <div class="component-body">Five discrete static scroll sections. No JS-gated progression. Each beat: headline, 2–4 sentences, one contextual action. Beat 4 is the primary CTA (link to /tools/gru). Stateless — no session, no cookie, no progress tracking.</div>
+        <span class="scope-tag">Scope boundary: No course outline, progress tracker, feature grid, or pricing section.</span>
+      </div>
+
+      <div class="component">
+        <div class="component-title">Component 2 — /tools Prompt Library</div>
+        <div class="component-needs">Needs: UN-2, UN-5, BN-2, ON-1–ON-3</div>
+        <div class="component-body">Hybrid card grid: filesystem-driven (artifact tools in <code>/public/tools/</code>) + DB-driven (prompt and link tools). Each tool detail page: description, how-to-use instructions, version, copy button, clipboard fallback (<code>&lt;pre&gt;</code> + "Select all"). Character count displayed for prompt-type tools.</div>
+        <span class="scope-tag">Scope boundary: Distributes prompts. Does not host conversations or evaluate prompt use.</span>
+      </div>
+
+      <div class="component">
+        <div class="component-title">Component 3 — /dev Worked Examples</div>
+        <div class="component-needs">Needs: UN-3, UN-5, BN-1, BN-2, ON-1–ON-3</div>
+        <div class="component-body">Two-source hybrid. Filesystem docs (<code>/public/dev/WWW/</code>, <code>/Agents/</code>, <code>/Games/</code>, with <code>/gru/</code> subfolder in each) + community uploads (Vercel Blob + <code>dev_docs</code> DB table). Card grid groups by category, Gru-badged within each group. Full-viewport sandboxed iframe viewer. Named error component on Blob 404 or missing file.
+        <br><br><strong>Community uploads:</strong> flat slug, category required before publish, <code>&lt;meta name="methodology" content="gru"&gt;</code> for Gru badge.</div>
+        <span class="scope-tag">Scope boundary: Document library only. No interactive tools, no live Claude sessions.</span>
+      </div>
+
+      <div class="component">
+        <div class="component-title">Component 4 — /videos Video Library</div>
+        <div class="component-needs">Needs: UN-4, UN-5, ON-1</div>
+        <div class="component-body">DB-driven, identical to Musinique. YouTube embeds (<code>youtube-nocookie.com</code>) + Vercel Blob uploads. Search, tag filtering, pagination, pinned videos. Direct YouTube link fallback below every embed.</div>
+        <span class="scope-tag">Scope boundary: No locked sequences, no progress tracking, no completion certificates.</span>
+      </div>
+
+      <div class="component">
+        <div class="component-title">Component 5 — /blog</div>
+        <div class="component-needs">Needs: UN-5, BN-1, BN-3, ON-1</div>
+        <div class="component-body">Identical to Musinique. Tiptap editor, DB-driven, Vercel Blob cover images, D3 viz hydration. Nik-authored only. Voice: argument and narrative, not reference documentation.</div>
+        <span class="scope-tag">Scope boundary: No community content. No comments.</span>
+      </div>
+
+      <div class="component">
+        <div class="component-title">Component 6 — Admin Dashboard</div>
+        <div class="component-needs">Needs: ON-1, ON-2, ON-3</div>
+        <div class="component-body">Identical auth to Musinique (HMAC-SHA256, httpOnly cookie, 7-day expiry). Tabs: Blog, Tools, Dev, Videos.
+        <br><br><strong>New vs. Musinique:</strong> Tools tab adds <code>prompt_text</code>, <code>quality_signal</code>, <code>version</code>, <code>published</code> fields. Dev tab adds HTML file upload → Vercel Blob, <code>category</code> (required before publish), <code>methodology</code>, <code>quality_signal</code>, <code>build_url</code>, draft/publish toggle, admin notes field (audit report).</div>
+        <span class="scope-tag">Scope boundary: No analytics, no user management, no automated link checking.</span>
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section class="section" id="s6">
+      <h2><span class="section-num">06</span> External Integrations and Dependencies</h2>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Integration</th><th>Purpose</th><th>Risk</th><th>Failure behavior</th></tr></thead>
+          <tbody>
+            <tr><td>Vercel</td><td>Deploy + serverless functions</td><td class="risk-high">HIGH — sole compute</td><td>Previous deployment stays live on build failure</td></tr>
+            <tr><td>Neon PostgreSQL</td><td>All DB content</td><td class="risk-med">MEDIUM</td><td>Blog/videos degrade; /tools artifact + /dev filesystem survive</td></tr>
+            <tr><td>Vercel Blob</td><td>Community HTML uploads + blog images</td><td class="risk-low">LOW</td><td>Named error component; filesystem content unaffected</td></tr>
+            <tr><td>YouTube</td><td>Public video embeds</td><td class="risk-low">LOW</td><td>Direct link fallback; course videos unaffected</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.87rem; color: var(--bb-6);">No integration is a hard dependency for the core teaching path (prompt copy). That flow survives failure of every external service except Vercel.</p>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section class="section" id="s7">
+      <h2><span class="section-num">07</span> Data Architecture and State Management</h2>
+      <p><strong>State model:</strong> Stateless server, stateless client. No global state store. React <code>useState</code> only, component-scoped. No <code>localStorage</code>.</p>
+
+      <h3>Key Tables</h3>
+      <pre class="code-block"><code>-- New table
+CREATE TABLE IF NOT EXISTS dev_docs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  blob_url TEXT NOT NULL,
+  build_url TEXT,
+  quality_signal TEXT DEFAULT 'community',
+  category TEXT,           -- 'www' | 'agents' | 'games' — required before publish
+  methodology TEXT,        -- 'gru' | null
+  submitted_by TEXT,       -- display name / handle only — no email
+  published BOOLEAN DEFAULT false,
+  published_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Extended from Musinique
+ALTER TABLE tools ADD COLUMN IF NOT EXISTS prompt_text TEXT;
+ALTER TABLE tools ADD COLUMN IF NOT EXISTS quality_signal TEXT DEFAULT 'community';
+ALTER TABLE tools ADD COLUMN IF NOT EXISTS version TEXT DEFAULT '1.0';
+ALTER TABLE tools ADD COLUMN IF NOT EXISTS published BOOLEAN DEFAULT false;
+
+-- Integrity constraint
+ALTER TABLE videos ADD CONSTRAINT video_source_required
+  CHECK (youtube_id IS NOT NULL OR blob_url IS NOT NULL);</code></pre>
+
+      <h3>Migration Run Order</h3>
+      <p style="font-size:0.88rem;">1. CREATE dev_docs → 2. ALTER tools (4 columns) → 3. ALTER dev_docs → 4. ADD video CHECK constraint → 5. Backfill tools (published=true, quality_signal='curated') → 6. RLS policies.</p>
+      <aside>
+        <strong>Critical Ordering Rule</strong>
+        The backfill UPDATE (step 5) must run after the ALTER TABLE (step 2). Writing to <code>published</code> before it exists causes an unrecoverable error. Read the migration script before running it.
+      </aside>
+
+      <h3>Retention</h3>
+      <p style="font-size:0.88rem;">No PII beyond <code>submitted_by</code> (display name only). No regulatory compliance requirements at launch. Privacy policy must note that contributor display names are stored.</p>
+    </section>
+
+    <!-- SECTION 8 -->
+    <section class="section" id="s8">
+      <h2><span class="section-num">08</span> Domain Model and Entity Definitions</h2>
+
+      <h3>Ubiquitous Language</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Term</th><th>Definition</th><th>Reject</th></tr></thead>
+          <tbody>
+            <tr><td>Boondoggling</td><td>The practice of conducting Claude through a build by assigning each task to the correct labor, sequencing by dependency, and making every handoff condition explicit</td><td>"A workaround"</td></tr>
+            <tr><td>Boondoggle Score</td><td>The sequenced, dependency-ordered output of /claude — separating Claude tasks from human tasks with copy-pasteable prompts and handoff conditions</td><td>"The build plan" — the SDD is the build plan</td></tr>
+            <tr><td>Gru</td><td>The system prompt that instantiates the Gru persona in a Claude Project</td><td>"The AI" — Gru is a role, Claude is the AI</td></tr>
+            <tr><td>Tool</td><td>A system prompt or HTML artifact in /tools that runs in the learner's local Claude environment</td><td>"A feature of the site"</td></tr>
+            <tr><td>Worked Example</td><td>A complete, real Gru SDD project hosted in /dev</td><td>"A demo" — demos are synthetic</td></tr>
+            <tr><td>Quality Signal</td><td>Admin-assigned curation label: Featured or Community</td><td>"A rating"</td></tr>
+            <tr><td>Handoff Condition</td><td>A specific, testable statement of what must be true about a Claude task's output before the next step begins</td><td>"Done criteria"</td></tr>
+            <tr><td>Learner</td><td>Anonymous developer/creator acquiring the methodology</td><td>"User" — no account at launch</td></tr>
+            <tr><td>Contributor</td><td>Practitioner who submits an SDD or tool variant</td><td>"User"</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Core Entities</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Entity</th><th>Key Fields</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Tool</td><td><code>tool_type</code>: artifact | link | prompt; <code>prompt_text</code> required when type=prompt; <code>quality_signal</code>: curated | community; <code>version</code>, <code>published</code></td><td>System prompt or HTML artifact in /tools</td></tr>
+            <tr><td>DevDoc</td><td><code>category</code> required before publish; <code>methodology</code>: gru | null; <code>quality_signal</code>: featured | community; <code>submitted_by</code>: display name only</td><td>Two sources: filesystem (Nik) and DB (community)</td></tr>
+            <tr><td>BlogPost</td><td>Ported from Musinique unchanged</td><td>Nik-authored only</td></tr>
+            <tr><td>Video</td><td><code>video_type</code>: youtube | upload; CHECK constraint: at least one of <code>youtube_id</code> or <code>blob_url</code> non-null</td><td>YouTube embed or Blob-uploaded course video</td></tr>
+            <tr><td>AdminSession</td><td>HMAC-SHA256 signed httpOnly cookie, 7-day expiry</td><td>Never client-side</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Bounded Context</h3>
+      <p style="font-size:0.88rem;">One context: <strong>Content Distribution.</strong> No commerce, no identity, no analytics domain at launch.</p>
+    </section>
+
+    <!-- SECTION 9 -->
+    <section class="section" id="s9">
+      <h2><span class="section-num">09</span> API Contract Documentation</h2>
+
+      <h3>API Surface</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>/api/admin/login</td><td>POST</td><td>None</td><td>Sets admin_session cookie</td></tr>
+            <tr><td>/api/admin/logout</td><td>POST</td><td>Admin</td><td>Clears cookie</td></tr>
+            <tr><td>/api/blog</td><td>GET/POST</td><td>GET: none, POST: admin</td><td></td></tr>
+            <tr><td>/api/blog/[id]</td><td>PATCH/DELETE</td><td>Admin</td><td></td></tr>
+            <tr><td>/api/tools</td><td>GET/POST</td><td>GET: none, POST: admin</td><td>prompt_text required for type=prompt</td></tr>
+            <tr><td>/api/tools/[id]</td><td>PATCH/DELETE</td><td>Admin</td><td></td></tr>
+            <tr><td>/api/dev</td><td>GET/POST</td><td>GET: none, POST: admin</td><td></td></tr>
+            <tr><td>/api/dev/upload</td><td>POST</td><td>Admin</td><td>Multipart; 5-step validation; Blob then DB</td></tr>
+            <tr><td>/api/dev/[id]</td><td>PATCH/DELETE</td><td>Admin</td><td>DELETE: Blob failure never blocks DB delete</td></tr>
+            <tr><td>/api/videos</td><td>GET/POST</td><td>GET: none, POST: admin</td><td></td></tr>
+            <tr><td>/api/videos/[id]</td><td>PATCH/DELETE</td><td>Admin</td><td></td></tr>
+            <tr><td>/api/upload</td><td>POST</td><td>Admin</td><td>Images (5MB) + course videos (500MB)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Global Behavior Guarantees</h3>
+      <p style="font-size:0.88rem;">All writes are synchronous — 200/201 means DB write completed · All errors return <code>{ "error": "string" }</code> — no stack traces in production · PATCH is idempotent — POST is not (duplicate slugs return 409) · Auth validated by middleware before any handler executes · No rate limiting at launch (single admin, read-only public routes)</p>
+
+      <h3>Critical Endpoint — /api/dev/upload</h3>
+      <p style="font-size:0.88rem;">Five-step server-side validation, run in order: (1) content-type HTML check, (2) ≤500kb size check, (3) HTML signature check (reads first bytes — independent of filename), (4) slug format check (<code>/^[a-z0-9-]+$/</code> — no slashes), (5) slug uniqueness check in DB. Blob write → DB insert (sequential). Blob failure = clean 500. DB failure after Blob success = orphaned file logged, admin retries safely. Auth is checked before any file processing.</p>
+    </section>
+
+    <!-- SECTION 10 -->
+    <section class="section" id="s10">
+      <h2><span class="section-num">10</span> Data Flow and Sequence Diagrams</h2>
+
+      <h3>Core Flows</h3>
+      <p style="font-size:0.88rem;"><strong>Learner copies Gru prompt:</strong> GET /tools → merge filesystem + DB → GET /tools/gru → tool detail page (prompt_text in DOM) → clipboard API → no server call. Survives Neon outage if Gru is filesystem artifact.</p>
+      <p style="font-size:0.88rem;"><strong>Learner views /dev doc:</strong> GET /dev → merge filesystem + DB → GET /dev/[slug] → resolve source (filesystem or Blob) → browser loads iframe src → sandboxed render. Blob 404 → named error component.</p>
+      <p style="font-size:0.88rem;"><strong>Admin uploads community doc:</strong> POST /api/dev/upload → validate → Blob put() → INSERT dev_docs (draft) → admin runs audit prompt locally → PATCH published=true.</p>
+      <blockquote>
+        <strong>No Chatty Interfaces</strong>
+        Every user-facing flow completes in 1–2 API calls. No async event architecture at launch.
+      </blockquote>
+
+      <h3>Latency Profile</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Call</th><th>Latency class</th><th>Fallback</th></tr></thead>
+          <tbody>
+            <tr><td>Neon SELECT on page load</td><td>Medium (100–500ms)</td><td>Filesystem content survives</td></tr>
+            <tr><td>Vercel Blob put()</td><td>Slow (&gt;500ms)</td><td>Clean error, admin retries</td></tr>
+            <tr><td>Vercel Blob GET (iframe)</td><td>Fast (&lt;100ms, CDN)</td><td>Named error component</td></tr>
+            <tr><td>YouTube iframe</td><td>Fast (&lt;100ms, CDN)</td><td>Direct link fallback</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 11 -->
+    <section class="section" id="s11">
+      <h2><span class="section-num">11</span> Component List with Priority Tags + MVS Spec</h2>
+
+      <h3>Priority Distribution</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Tag</th><th>Count</th><th>Percent</th></tr></thead>
+          <tbody>
+            <tr><td>MUST-BUILD</td><td>18 items</td><td>47% — justified; majority are Musinique ports</td></tr>
+            <tr><td>IMPORTANT</td><td>11 items</td><td>29%</td></tr>
+            <tr><td>NICE-TO-HAVE</td><td>7 items</td><td>18%</td></tr>
+            <tr><td>EXPERIMENTAL</td><td>3 items</td><td>8% — user accounts, community form, Substack</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mvs-block">
+        <div class="mvs-label">MVS Statement — MUST-BUILD Only</div>
+        The core loop is complete with MUST-BUILD only: learn the concept (homepage) → get the tool (/tools) → study real builds (/dev) → watch instruction (/videos) → read methodology (/blog) → admin publishes content without redeploying. Search, filtering, and polish (IMPORTANT) improve but do not break the experience.
+      </div>
+
+      <h3>Critical Net-New MUST-BUILD Items</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td>Homepage scroll arc</td><td>Static 5-beat page — no framework complexity</td></tr>
+            <tr><td>Admin dev tab + upload</td><td>Most complex admin tab; Blob + DB write sequence</td></tr>
+            <tr><td>/api/dev/upload</td><td>5-step validation, Blob then DB</td></tr>
+            <tr><td>Category/Gru taxonomy</td><td>Filesystem directories + meta tag read</td></tr>
+            <tr><td>Iframe sandbox + error</td><td>One JSX attribute + one error component</td></tr>
+            <tr><td>Quality signal on cards</td><td>One DB field + one CSS class</td></tr>
+            <tr><td>Admin: Doc Audit Prompt</td><td>Content entry in /tools — zero code</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 12 -->
+    <section class="section" id="s12">
+      <h2><span class="section-num">12</span> Out of Scope</h2>
+      <p style="font-size:0.87rem; color: var(--bb-6); margin-bottom: 12px;">Binding record of decisions. Reopening requires a documented reason with a date.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>Reason</th><th>Reopen condition</th></tr></thead>
+          <tbody>
+            <tr><td>User accounts</td><td>No auth surface needed at launch</td><td>v2</td></tr>
+            <tr><td>Progress tracking</td><td>Requires accounts</td><td>v2</td></tr>
+            <tr><td>On-site Claude API</td><td>No API proxy; learner runs locally</td><td>Permanently excluded unless business model changes</td></tr>
+            <tr><td>Community submission form</td><td>Email/DM sufficient at launch</td><td>v2</td></tr>
+            <tr><td>Automated on-site audit</td><td>Publish decision is irreducibly human</td><td>Permanently excluded</td></tr>
+            <tr><td>Substack integration</td><td>Not in content strategy at launch</td><td>v2</td></tr>
+            <tr><td>Course module system</td><td>Violates P2</td><td>Permanently excluded</td></tr>
+            <tr><td>Blog/dev comments</td><td>Requires moderation infrastructure</td><td>v2</td></tr>
+            <tr><td>Paid content</td><td>No commerce context</td><td>Separate SDD required</td></tr>
+            <tr><td>Admin analytics dashboard</td><td>Vercel Analytics sufficient</td><td>v2</td></tr>
+            <tr><td>Multi-admin / RBAC</td><td>Solo operator at launch</td><td>v2</td></tr>
+            <tr><td>Mobile app</td><td>Desktop use case</td><td>Not planned</td></tr>
+            <tr><td>Global search</td><td>High complexity, low launch value</td><td>v2</td></tr>
+            <tr><td>Tool version diff UI</td><td>version field sufficient at launch</td><td>v2</td></tr>
+            <tr><td>i18n</td><td>English only</td><td>Future</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 13 -->
+    <section class="section" id="s13">
+      <h2><span class="section-num">13</span> Infrastructure and Deployment Requirements</h2>
+
+      <p><strong>Stack:</strong> Next.js 15 (App Router), TypeScript 5, Tailwind CSS, Vercel, Neon PostgreSQL, Vercel Blob. Identical to Musinique.</p>
+      <p><strong>New:</strong> Domain <code>boondoggling.ai</code> — DNS pointed to Vercel before launch.</p>
+
+      <h3>Environment Variables</h3>
+      <pre class="code-block"><code>DATABASE_URL
+ADMIN_PASSWORD
+BLOB_READ_WRITE_TOKEN
+NEXT_PUBLIC_SITE_URL=https://www.boondoggling.ai
+NEXT_PUBLIC_GA_ID (optional)</code></pre>
+
+      <h3>Pre-Launch Checklist</h3>
+      <ul class="checklist">
+        <li><span class="check-box"></span>Vercel project created, domain pointed, SSL issued</li>
+        <li><span class="check-box"></span>Neon Pro plan provisioned, all migrations run</li>
+        <li><span class="check-box"></span>Environment variables set in Vercel dashboard</li>
+        <li><span class="check-box"></span>/public/dev/ subdirectory scaffold created (WWW/, Agents/, Games/ + gru/ within each)</li>
+        <li><span class="check-box"></span>Three Featured /dev docs published (one per category, all Gru-produced)</li>
+        <li><span class="check-box"></span>Five videos published</li>
+        <li><span class="check-box"></span>Gru system prompt published in /tools</li>
+        <li><span class="check-box"></span>Admin: Doc Audit Prompt published in /tools</li>
+        <li><span class="check-box"></span>Admin login tested, copy button tested, iframe sandbox verified on production URL</li>
+      </ul>
+    </section>
+
+    <!-- SECTION 14 -->
+    <section class="section" id="s14">
+      <h2><span class="section-num">14</span> Risk Register</h2>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Unsandboxed community HTML (XSS)</td><td class="risk-high">High</td><td class="risk-high">High</td><td><code>sandbox</code> attribute on all community iframes — non-negotiable</td></tr>
+            <tr><td>Principle drift during implementation</td><td class="risk-med">Medium</td><td class="risk-high">High</td><td>SDD is the reference; run /g2 before v2 planning</td></tr>
+            <tr><td>Content drought at launch</td><td class="risk-med">Medium</td><td class="risk-high">High</td><td>Three Featured docs + five videos required before launch date is set</td></tr>
+            <tr><td>Blob orphan accumulation</td><td class="risk-med">Medium</td><td class="risk-low">Low</td><td>Log orphaned URLs; monthly manual cleanup; v2 cleanup job</td></tr>
+            <tr><td>Admin publishes without audit</td><td class="risk-med">Medium</td><td class="risk-med">Medium</td><td>UI reminder in dashboard; technical enforcement in v2</td></tr>
+            <tr><td>Category taxonomy inadequate</td><td class="risk-low">Low</td><td class="risk-low">Low–Medium</td><td>New category = new subdirectory, no code change</td></tr>
+            <tr><td>Gru prompt exceeds Claude Project limit</td><td class="risk-low">Low</td><td class="risk-high">High</td><td>Character count on tool detail page; split prompt as contingency</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <aside>
+        <strong>Top 3 Production Risks</strong>
+        (1) Unsandboxed HTML — security, implementation-time risk. (2) Content Drought — credibility, pre-launch gate. (3) Principle Drift — slow-burn design risk.
+      </aside>
+    </section>
+
+    <!-- SECTION 15 -->
+    <section class="section" id="s15">
+      <h2><span class="section-num">15</span> Open Questions Log</h2>
+
+      <p style="font-size:0.87rem; color: var(--bb-6); margin-bottom: 16px;">14 of 15 questions resolved. One remaining — non-blocking.</p>
+
+      <div class="oq-card">
+        <div class="oq-id">OQ-13 — Video CHECK Constraint</div>
+        <div style="font-size:0.88rem; margin-top: 6px;">Must be included in migration script before launch. The constraint requires that at least one of <code>youtube_id</code> or <code>blob_url</code> is non-null on every video record. This is addressed in the migration script (step 4 in the run order). Owner: Nik Bear Brown. Status: Non-blocking until migration run.</div>
+      </div>
+
+      <h3>v2 Planning Inputs</h3>
+      <p style="font-size:0.88rem; color: var(--bb-6);">User auth provider · Community submission form + privacy policy · Global search index · Orphaned Blob cleanup job · Audit checkbox enforcement · Fourth /dev category trigger · Substack newsletter integration</p>
+    </section>
+
+    <!-- SECTION 16 -->
+    <section class="section" id="s16">
+      <h2><span class="section-num">16</span> Document Metadata</h2>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Version</td><td>1.0</td></tr>
+            <tr><td>Date</td><td>March 30, 2026</td></tr>
+            <tr><td>Owner</td><td>Nik Bear Brown / Bear Brown &amp; Company / Musinique LLC</td></tr>
+            <tr><td>Produced with</td><td>Gru (Ada + Boondoggling layer)</td></tr>
+            <tr><td>Phases completed</td><td>V1–V4, S1–S4, D1–D3, P1–P5</td></tr>
+            <tr><td>Open questions</td><td>1 (OQ-13 — non-blocking)</td></tr>
+            <tr><td>Status</td><td><span class="status-ready">Ready to Govern Implementation</span></td></tr>
+            <tr><td>Next action</td><td>/g2 audit, then /claude Boondoggle Score</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div><!-- /page -->
+</div><!-- /layout -->
+
+<footer>
+  Built with <a href="https://www.bearbrown.co">bearbrown.co</a> · AI tools for educators, creators &amp; founders
+</footer>
+
+</body>
+</html>

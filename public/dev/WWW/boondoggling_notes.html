@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boondoggling — The Art of Conducting Claude</title>
+  <meta name="description" content="Boondoggling is the practice of conducting AI — not just using it. This guide introduces the Gru/Minions mental model, the vocabulary of waiting, and the five supervisory capacities that only humans can exercise in an AI-assisted build.">
+  <meta name="keywords" content="boondoggling, Claude AI, prompt engineering, AI workflows, software design, human-AI collaboration, Claude Code, AI productivity, supervisory capacities, Gru and minions">
+  <meta name="date" content="2026-03-30">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bb-1: #1a0a00;
+      --bb-2: #8B3A0F;
+      --bb-3: #C0392B;
+      --bb-4: #E8A020;
+      --bb-5: #D4500A;
+      --bb-6: #B8860B;
+      --bb-7: #C8A96E;
+      --bb-8: #F0E6D0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bb-8);
+      color: var(--bb-1);
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      padding: 0 20px;
+    }
+
+    .article-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 0 80px;
+    }
+
+    /* ── HEADER ── */
+    .article-header {
+      border-bottom: 2px solid var(--bb-7);
+      padding-bottom: 32px;
+      margin-bottom: 40px;
+    }
+
+    .article-kicker {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--bb-5);
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--bb-2);
+      line-height: 1.18;
+      margin-bottom: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .article-deck {
+      font-size: 1.1rem;
+      color: var(--bb-1);
+      line-height: 1.6;
+      font-weight: 400;
+      margin-bottom: 20px;
+      opacity: 0.85;
+    }
+
+    .article-date {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--bb-6);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── BODY ── */
+    p { margin-bottom: 1.4em; }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--bb-2);
+      margin: 52px 0 16px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--bb-1);
+      margin: 32px 0 10px;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── PULL QUOTE ── */
+    blockquote {
+      border-left: 4px solid var(--bb-4);
+      margin: 36px 0;
+      padding: 18px 24px;
+      background: rgba(232,160,32,0.07);
+      border-radius: 0 4px 4px 0;
+    }
+
+    blockquote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--bb-1);
+      margin-bottom: 0;
+      line-height: 1.6;
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.82rem;
+      font-style: normal;
+      font-family: 'Courier New', monospace;
+      color: var(--bb-6);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── CALLOUT / ASIDE ── */
+    aside {
+      border-left: 4px solid var(--bb-3);
+      margin: 36px 0;
+      padding: 18px 24px;
+      background: rgba(192,57,43,0.05);
+      border-radius: 0 4px 4px 0;
+    }
+
+    aside .aside-label {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--bb-3);
+      margin-bottom: 8px;
+    }
+
+    aside p {
+      margin-bottom: 0;
+      font-size: 0.95rem;
+      color: var(--bb-1);
+    }
+
+    /* ── VOCABULARY GRID ── */
+    .vocab-grid {
+      display: grid;
+      gap: 0;
+      margin: 28px 0 36px;
+      border: 1px solid var(--bb-7);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .vocab-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      border-bottom: 1px solid var(--bb-7);
+    }
+
+    .vocab-item:last-child { border-bottom: none; }
+
+    .vocab-term {
+      background: rgba(200,169,110,0.15);
+      padding: 14px 18px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--bb-2);
+      letter-spacing: 0.03em;
+      border-right: 1px solid var(--bb-7);
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .vocab-def {
+      padding: 14px 18px;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--bb-1);
+    }
+
+    /* ── SUPERVISORY CAPACITIES ── */
+    .capacity-list {
+      margin: 28px 0 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .capacity-item {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 0 18px;
+      align-items: start;
+    }
+
+    .capacity-badge {
+      background: var(--bb-5);
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      padding: 5px 4px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    .capacity-body strong {
+      display: block;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--bb-2);
+      margin-bottom: 4px;
+    }
+
+    .capacity-body p {
+      font-size: 0.93rem;
+      margin-bottom: 0;
+      color: var(--bb-1);
+    }
+
+    /* ── PROCESS STEPS ── */
+    .process-steps {
+      counter-reset: steps;
+      margin: 24px 0 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .process-step {
+      counter-increment: steps;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 0 14px;
+      align-items: start;
+    }
+
+    .process-step::before {
+      content: counter(steps);
+      background: var(--bb-2);
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .process-step p {
+      margin-bottom: 0;
+      font-size: 0.95rem;
+      padding-top: 4px;
+    }
+
+    /* ── DIVIDER ── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--bb-7);
+      margin: 52px 0;
+    }
+
+    /* ── CLOSING ── */
+    .article-closing {
+      margin-top: 52px;
+      padding-top: 28px;
+      border-top: 1px solid var(--bb-7);
+      font-size: 0.9rem;
+      color: var(--bb-6);
+      font-style: italic;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 0 40px;
+      border-top: 1px solid var(--bb-7);
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: var(--bb-6);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    footer a {
+      color: var(--bb-5);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .vocab-item { grid-template-columns: 1fr; }
+      .vocab-term { border-right: none; border-bottom: 1px solid var(--bb-7); }
+      .capacity-item { grid-template-columns: 1fr; }
+      .capacity-badge { width: 52px; margin-bottom: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="article-wrap">
+
+  <header class="article-header">
+    <p class="article-kicker">boondoggling.ai · Practice Guide</p>
+    <h1>Boondoggling: The Art of Conducting Claude</h1>
+    <p class="article-deck">Anyone can use Claude code. Boondogglers conduct it — with structure, precision, and the five supervisory capacities that no model can replace.</p>
+    <p class="article-date">March 30, 2026</p>
+  </header>
+
+  <blockquote>
+    <p>A moderately complex website — six routes, a hybrid filesystem/database architecture, an admin dashboard, a community upload pipeline, a sandboxed iframe viewer, and a full prompt library — went from idea to live in roughly three hours.</p>
+    <cite>Two hours of conversation. One hour of Claude Code. Nearly all the time was spent talking.</cite>
+  </blockquote>
+
+  <p>Every prompt worked. Not because the prompts were magic. Because the conversation that produced them was structured. That is boondoggling.</p>
+
+  <h2>Gru and the Minions</h2>
+
+  <p>The mental model comes from the movie. Gru does not build the rocket. Gru designs the mission, assigns the minions, checks their work, decides what the mission IS, and takes responsibility for the outcome.</p>
+
+  <p>The minions are excellent. They are enthusiastic. They will execute exactly what they understood you to mean.</p>
+
+  <aside>
+    <p class="aside-label">⚠ The Core Risk</p>
+    <p>That gap — between what you meant and what they understood — is where all the damage lives. Claude is the minions: fast, capable, tireless, and completely dependent on the quality of the instruction they receive.</p>
+  </aside>
+
+  <p>Give them a vague prompt and they will produce a confident, plausible, wrong answer. Give them a complete specification — with context inline, output format named, negative constraints stated, and a testable handoff condition — and they will produce exactly what you needed.</p>
+
+  <p>Your job is not to type less. Your job is to be Gru.</p>
+
+  <h2>The Vocabulary of Waiting</h2>
+
+  <p>Anthropic's Claude interface has a gift for anyone who works with AI: a collection of words for what Claude is doing while it thinks. They are not progress indicators. They are tiny moments of delight.</p>
+
+  <div class="vocab-grid">
+    <div class="vocab-item">
+      <div class="vocab-term">Frick-fracking</div>
+      <div class="vocab-def">The iterative work. Claude Code running, making changes, testing, adjusting. Productive and does not require your attention. This is where the actual build lives.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Perambulating</div>
+      <div class="vocab-def">Wandering through the problem space. What Claude does when it is exploring before it commits.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Discombobulating</div>
+      <div class="vocab-def">The moment before clarity. Useful to name — it means something real is being worked out.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Confabulating</div>
+      <div class="vocab-def"><strong>The danger word.</strong> Producing plausible output not grounded in reality. Confabulation sounds correct. It often reads correctly. Only domain knowledge catches it.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Ruminating</div>
+      <div class="vocab-def">Turning something over. Slow and deliberate. Good for complex reasoning steps.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Cogitating</div>
+      <div class="vocab-def">Working it out. Formal, a little stiff, which makes it funnier.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Noodling</div>
+      <div class="vocab-def">Dreaming. The lightest touch. This is where new features come from — not a spec, not a requirement, just a thought that something could be interesting.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Pontificating</div>
+      <div class="vocab-def">Holding forth at length. Occasionally useful. Occasionally what Claude does when a shorter answer would have served.</div>
+    </div>
+    <div class="vocab-item">
+      <div class="vocab-term">Gallivanting</div>
+      <div class="vocab-def">Going off in a direction that was not requested. A risk. Also occasionally where the best ideas come from.</div>
+    </div>
+  </div>
+
+  <h2>The Five Things Only You Can Do</h2>
+
+  <p>Boondoggling makes five supervisory capacities explicit. These are not skills you develop. They are roles you exercise at specific moments in a build.</p>
+
+  <div class="capacity-list">
+    <div class="capacity-item">
+      <div class="capacity-badge">PA</div>
+      <div class="capacity-body">
+        <strong>Plausibility Auditing</strong>
+        <p>Hearing the wrong note before you recompute it. Knowing an output is wrong because of what you know about the domain — not because you checked. This is the capacity that catches confabulation. Claude cannot do this for itself.</p>
+      </div>
+    </div>
+    <div class="capacity-item">
+      <div class="capacity-badge">PF</div>
+      <div class="capacity-body">
+        <strong>Problem Formulation</strong>
+        <p>Deciding what the mission is before Claude sees it. Not reframing after — before. The quality of the output is determined here, before any prompt is written.</p>
+      </div>
+    </div>
+    <div class="capacity-item">
+      <div class="capacity-badge">TO</div>
+      <div class="capacity-body">
+        <strong>Tool Orchestration</strong>
+        <p>Choosing which Claude task, in what order, with what context, and how to verify it. Deciding when to trust the output and when to run another check. This turns a collection of prompts into a build sequence.</p>
+      </div>
+    </div>
+    <div class="capacity-item">
+      <div class="capacity-badge">IJ</div>
+      <div class="capacity-body">
+        <strong>Interpretive Judgment</strong>
+        <p>Supplying meaning, accountability, and domain reality to Claude's output. Deciding which of Claude's variations is correct for this context. Signing your name to the decision. Claude cannot be accountable for what it produces. You can.</p>
+      </div>
+    </div>
+    <div class="capacity-item">
+      <div class="capacity-badge">EI</div>
+      <div class="capacity-body">
+        <strong>Executive Integration</strong>
+        <p>Holding all four simultaneously toward a unified goal. Recognizing when one Claude output requires another task to re-engage. Knowing when the build is done.</p>
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <p class="aside-label">⚠ A Structural Truth</p>
+    <p>None of these are things a better model will eventually do. They are structural features of what statistical pattern matching is. The gap between what Claude produces and what is true in your specific domain will not close. Your job is to stand in that gap with judgment.</p>
+  </aside>
+
+  <h2>The Boondoggle Score</h2>
+
+  <p>After a Software Design Document is complete, <code style="font-family:'Courier New',monospace; font-size:0.9em; background:rgba(200,169,110,0.2); padding:2px 6px; border-radius:3px;">/claude</code> generates the Boondoggle Score — a conductor's score with two simultaneous parts: the Minion Part and the Gru Part.</p>
+
+  <p>Every Claude task has context required, a complete copy-pasteable prompt, an expected output, and a handoff condition. Every human task has a supervisory capacity label and a specific action.</p>
+
+  <blockquote>
+    <p>The handoff condition is the most important element. A minion who does not know when to stop will stop at the wrong place or not stop at all.</p>
+    <cite>The handoff condition is the conductor's downbeat.</cite>
+  </blockquote>
+
+  <h2>What Comes Next: Frick-Fracking</h2>
+
+  <p>Version one is not the product. Version one is the thing you learn from. The real world will test the site. Users will find paths you did not design for.</p>
+
+  <p>The process for frick-fracking is lighter than the full SDD build:</p>
+
+  <div class="process-steps">
+    <div class="process-step"><p>Name what needs to change and why (one sentence).</p></div>
+    <div class="process-step"><p>Check whether the change contradicts anything in the SDD (one minute).</p></div>
+    <div class="process-step"><p>Write the prompt — precise, context inline, handoff condition named.</p></div>
+    <div class="process-step"><p>Verify the output.</p></div>
+    <div class="process-step"><p>Ship.</p></div>
+  </div>
+
+  <p>The SDD is what makes frick-fracking safe. Because the architecture is documented, small changes do not accidentally become large ones.</p>
+
+  <h2>What Comes After That: Noodling</h2>
+
+  <p>Noodling is dreaming. It has no deliverable. It is the lightest touch — a thought that something could be interesting, a feature that might exist, a direction the platform could go. Noodling is where the next SDD begins.</p>
+
+  <p>The discipline is knowing which noodle is worth developing and which is a gallivant — an appealing direction that does not serve the person the site is built for. Every noodle that survives the "what problem does this solve for whom?" test becomes a candidate for the next build cycle.</p>
+
+  <h2>The Practice</h2>
+
+  <p>Boondoggling is not a tool. It is a practice.</p>
+
+  <blockquote>
+    <p>Before Claude sees the problem, you decide what the problem is. Before Claude produces output, you specify what done looks like. After Claude produces output, you verify it against domain reality before the next step begins.</p>
+  </blockquote>
+
+  <p>You are not saving time by skipping those steps. You are borrowing it, at interest, from the moment when the wrong thing ships and has to be unwound.</p>
+
+  <div class="article-closing">
+    <p>The minions are excellent. The mission is yours.</p>
+    <p style="margin-top:10px;">Built with Gru. Documented with the methodology it teaches. · boondoggling.ai</p>
+  </div>
+
+</div>
+
+<footer>
+  Built with <a href="https://www.bearbrown.co">bearbrown.co</a> · AI tools for educators, creators &amp; founders
+</footer>
+
+</body>
+</html>
