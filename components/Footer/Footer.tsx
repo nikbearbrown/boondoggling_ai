@@ -8,7 +8,7 @@ export default function Footer() {
   return (
     <footer className="w-full border-t bg-background">
       <div className="container px-4 md:px-6 mx-auto py-10">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {/* Company Info */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold">Bear Brown, LLC</h3>
@@ -40,6 +40,22 @@ export default function Footer() {
               <Link href="/videos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Videos
               </Link>
+            </div>
+          </div>
+
+          {/* Recommended */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold">Recommended</h3>
+            <div className="flex flex-col gap-2">
+              <a href="https://www.bearbrown.co/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Bear Brown</a>
+              <a href="https://www.humanitarians.ai/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Humanitarians AI</a>
+              <a href="https://www.irreducibly.xyz" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Irreducibly-Human</a>
+              <a href="https://www.livingmodels.org/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Living Models</a>
+              <a href="https://www.medhavy.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Medhavy</a>
+              <a href="https://www.musinique.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Musinique</a>
+              <a href="https://www.nikbearbrown.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">NikBearBrown</a>
+              <a href="https://www.skepticism.ai/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Skepticism</a>
+              <a href="https://www.theorist.ai/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Theorist</a>
             </div>
           </div>
 
