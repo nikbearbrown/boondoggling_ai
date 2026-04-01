@@ -55,6 +55,15 @@ export default function HomePage() {
               Boondoggling is the practice of learning how.
             </p>
           </div>
+          <div className="mt-10 aspect-video w-full rounded-lg overflow-hidden shadow-lg">
+            <iframe
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/fj37RDSaVtE?si=Sn-93ay6eGwLXMzV"
+              title="Boondoggling.ai"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
         </div>
       </section>
 
