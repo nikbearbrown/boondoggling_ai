@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boondoggle Score — Trust Template Generator</title>
+  <meta name="description" content="Boondoggle Score for the trust-template generator and Zebonastic tools system integration. Documents a 26-step deployment pipeline across Foundation, Core, Integration, Build, Hardening, and Release phases for the Ethical Play course.">
+  <meta name="keywords" content="boondoggle score, trust template, zebonastic, ethical play, pipeline, game deployment, prisoner's dilemma">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bb-1: #1a0a00;
+      --bb-2: #8B3A0F;
+      --bb-3: #C0392B;
+      --bb-4: #E8A020;
+      --bb-5: #D4500A;
+      --bb-6: #B8860B;
+      --bb-7: #C8A96E;
+      --bb-8: #F0E6D0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bb-8);
+      color: var(--bb-1);
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 48px 24px;
+    }
+    .container { max-width: 760px; margin: 0 auto; }
+
+    h1 { font-size: 2rem; font-weight: 600; color: var(--bb-2); margin-bottom: 8px; }
+    h2 { font-size: 1.25rem; font-weight: 600; color: var(--bb-2); margin: 40px 0 12px; border-bottom: 1px solid var(--bb-7); padding-bottom: 6px; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--bb-5); margin: 24px 0 8px; }
+
+    p { margin-bottom: 12px; }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    blockquote {
+      border-left: 4px solid var(--bb-4);
+      padding: 12px 20px;
+      margin: 20px 0;
+      background: rgba(232,160,32,0.08);
+      border-radius: 0 4px 4px 0;
+      color: var(--bb-1);
+    }
+
+    ul, ol { padding-left: 1.5em; margin-bottom: 12px; }
+    li { margin-bottom: 4px; }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85em;
+      background: rgba(200,169,110,0.25);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--bb-2);
+    }
+    pre {
+      background: rgba(200,169,110,0.2);
+      border: 1px solid var(--bb-7);
+      border-radius: 4px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.8em;
+      color: var(--bb-1);
+      line-height: 1.6;
+    }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; }
+    th { background: var(--bb-2); color: var(--bb-8); padding: 10px 14px; text-align: left; font-weight: 600; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--bb-7); }
+    tr:last-child td { border-bottom: none; }
+
+    .meta-block {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--bb-6);
+      margin-bottom: 32px;
+      line-height: 2;
+    }
+
+    .step-label {
+      display: inline-block;
+      background: var(--bb-5);
+      color: #fff;
+      font-size: 0.7rem;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+
+    .risk-box {
+      border-left: 4px solid var(--bb-3);
+      background: rgba(192,57,43,0.06);
+      padding: 16px 20px;
+      border-radius: 0 4px 4px 0;
+      margin: 20px 0;
+    }
+
+    .flag-box {
+      border-left: 4px solid var(--bb-4);
+      background: rgba(232,160,32,0.08);
+      padding: 16px 20px;
+      border-radius: 0 4px 4px 0;
+      margin: 20px 0;
+    }
+
+    hr { border: none; border-top: 1px solid var(--bb-7); margin: 32px 0; }
+
+    .closing-line {
+      margin-top: 40px;
+      font-style: italic;
+      color: var(--bb-6);
+      font-size: 0.95em;
+    }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 20px;
+      border-top: 1px solid var(--bb-7);
+      color: var(--bb-6);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--bb-6); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Boondoggle Score</h1>
+
+  <div class="meta-block">
+    <div><strong>System:</strong> trust-template generator + Zebonastic tools system integration</div>
+    <div><strong>SDD Completion:</strong> Build complete (generator + 3 site patches). ToolsBrowser.tsx patch not yet written.</div>
+    <div><strong>Score generated:</strong> 2026-03-31</div>
+    <div><strong>Team Claude fluency:</strong> Level III — Claude Code</div>
+    <div><strong>Deployment target:</strong> Vercel (Zebonastic site) — instructor deploys games</div>
+  </div>
+
+  <h2>Phase Legend</h2>
+  <table>
+    <thead><tr><th>Phase</th><th>Name</th></tr></thead>
+    <tbody>
+      <tr><td>F</td><td>Foundation — spikes on all experimental components</td></tr>
+      <tr><td>C</td><td>Core System Skeleton — apply verified patches</td></tr>
+      <tr><td>I</td><td>Integration Layer — first game deployed, full pipeline tested</td></tr>
+      <tr><td>B</td><td>Full Feature Build — student workflow + additional templates</td></tr>
+      <tr><td>H</td><td>Hardening — error handling, edge cases</td></tr>
+      <tr><td>R</td><td>Release</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote><strong>SPIKE FLAG:</strong> All three Zebonastic patches (scanArtifactsDir, tools/page.tsx, tools/[slug]/page.tsx) are unverified against the live codebase. The Foundation phase runs six spike steps — three Claude, three human — before any patch is applied. No C-phase work begins until all Foundation handoff conditions are met.</blockquote>
+
+  <hr>
+
+  <h2>Step 1 · Phase F · Human Task</h2>
+  <div class="step-label">Labor: Human · [PF] Problem Formulation</div>
+  <p>Before Claude Code touches anything, the human must decide what "this spike passed" means for each experimental component. Claude Code will verify against whatever criteria exist; if the criteria are vague, the verification is vague.</p>
+
+  <h3>Action</h3>
+  <p>Write down — literally, in a text file or a note — the pass/fail condition for each of the three spikes about to run:</p>
+  <ol>
+    <li><strong>scanArtifactsDir spike (Step 4) passes when:</strong> <code>scanArtifactsDir()</code> called on a directory containing one flat <code>.html</code> file and one subdirectory with <code>index.html</code> returns exactly two results, both with correct <code>slug</code>, <code>isDirectory</code>, <code>artifactPath</code>, <code>keywords[]</code>, and <code>title</code> fields.</li>
+    <li><strong>PD.js overwrite spike (Step 8) passes when:</strong> The browser console shows <code>PEEP_METADATA</code> overwritten with <code>example-game.json</code> values before any Slideshow/PIXI initialization log appears.</li>
+    <li><strong>ToolsBrowser audit (Step 6) passes when:</strong> You have the current props interface in writing and know whether changing it will break any other caller.</li>
+  </ol>
+  <p>Do not proceed to Step 2 without these written down. The spike sequence is only useful if the human can say "pass" or "fail" without ambiguity.</p>
+  <p><strong>Handoff condition:</strong> Spike success criteria exist in writing before Step 2 begins.</p>
+  <p><strong>Dependency:</strong> None.</p>
+
+  <hr>
+
+  <h2>Step 2 · Phase F · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>trust-template/generate.js</code>, <code>trust-template/example-game.json</code>, a clone of <code>ncase/trust</code> at <code>./trust-source</code></p>
+
+  <h3>Prompt</h3>
+  <pre><code>Create a directory ./example-game/ containing a copy of example-game.json from trust-template/.
+Then run:
+
+  node trust-template/generate.js ./example-game ./trust-source ./dist-smoke-test
+
+After the run completes:
+
+1. Verify directory structure: dist-smoke-test/ contains index.html, words.html, js/, css/, assets/
+
+2. Verify meta tag injection in dist-smoke-test/index.html:
+   grep -n "description\|keywords\|user-config\|Evolution of Trust" dist-smoke-test/index.html
+   Expected: &lt;title&gt;The Evolution of Trust&lt;/title&gt;, &lt;meta name="description"...&gt;, &lt;meta name="keywords"...&gt;, &lt;script src="js/user-config.js"&gt;
+
+3. Verify user-config.js was generated:
+   cat dist-smoke-test/js/user-config.js
+   Expected: PEEP_METADATA = { tft: { frame: 0, color: "#4089DD" }, all_d: ... } with all 8 strategy IDs
+
+4. Report the full terminal output from the generator, any errors, and the results of steps 2–3.</code></pre>
+
+  <p><strong>Expected output:</strong> Terminal output showing all copy steps completing with "done", grep showing all 4 expected lines in index.html, user-config.js showing all 8 strategy keys.</p>
+  <p><strong>Handoff condition:</strong> Generator runs without errors, all 4 expected strings found in index.html, all 8 strategy IDs present in user-config.js.</p>
+  <p><strong>Dependency:</strong> None (runs locally, no Zebonastic site involved).</p>
+
+  <hr>
+
+  <h2>Step 3 · Phase F · Human Task</h2>
+  <div class="step-label">Labor: Human · [PA] Plausibility Auditing</div>
+  <p>Claude Code can verify that strings exist in files. It cannot open a browser and evaluate whether what appears on screen matches the intended character design. This check requires eyes.</p>
+
+  <h3>Action</h3>
+  <pre><code>cd dist-smoke-test
+npx http-server -p 8080</code></pre>
+  <p>Open <code>http://localhost:8080</code>. Play through the first three slides. Check:</p>
+  <ul>
+    <li>Page title in browser tab reads "The Evolution of Trust"</li>
+    <li>Characters in the coin-machine scene have the expected colors from <code>example-game.json</code> (#4089DD blue for tft/Copycat, #52537F purple for all_d/Always Cheat, etc.)</li>
+    <li>The game does not throw a JavaScript error in the browser console on load</li>
+  </ul>
+  <p>If any character shows the wrong color or the original name ("Copycat" is the original — acceptable here since <code>example-game.json</code> uses original names intentionally), that is not a failure. A failure is: characters all showing a single wrong color, or a JS error in the console before any slide renders.</p>
+  <p><strong>Handoff condition:</strong> Game loads in browser, characters display colors matching <code>example-game.json</code>, no JS errors on load.</p>
+  <p><strong>Dependency:</strong> Step 2.</p>
+
+  <hr>
+
+  <h2>Step 4 · Phase F · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>trust-template/zebonastic-patches/lib-html-meta-addition.ts</code>, the Zebonastic project's <code>lib/html-meta.ts</code></p>
+
+  <h3>Prompt</h3>
+  <pre><code>Write a test script test-scan-artifacts.ts at the Zebonastic project root that spikes scanArtifactsDir() in isolation before it touches the live codebase.
+
+The script should:
+
+1. Create a temporary test directory at /tmp/test-artifacts-spike/ containing:
+   - /tmp/test-artifacts-spike/flat-tool.html with:
+     &lt;title&gt;Flat Tool&lt;/title&gt;
+     &lt;meta name="description" content="A flat HTML tool"/&gt;
+     &lt;meta name="keywords" content="test, flat, html"/&gt;
+   - /tmp/test-artifacts-spike/dir-game/index.html with:
+     &lt;title&gt;Directory Game&lt;/title&gt;
+     &lt;meta name="description" content="A directory-based game"/&gt;
+     &lt;meta name="keywords" content="game, directory, trust, ethics"/&gt;
+
+2. Run the scanArtifactsDir() function from lib-html-meta-addition.ts against /tmp/test-artifacts-spike/
+   (copy the function inline or import it — whichever compiles faster)
+
+3. Assert all of the following and print PASS or FAIL for each:
+   - Result count = 2
+   - flat-tool: isDirectory=false, slug='flat-tool', artifactPath='/artifacts/flat-tool.html'
+   - flat-tool: keywords includes 'test', 'flat', 'html'
+   - dir-game: isDirectory=true, slug='dir-game', artifactPath='/artifacts/dir-game/index.html'
+   - dir-game: keywords includes 'game', 'directory', 'trust', 'ethics'
+   - dir-game: title = 'Directory Game'
+   - Both results: description is non-empty string
+
+4. Run the script with: npx ts-node test-scan-artifacts.ts
+   Report the full output and any TypeScript compilation errors.
+
+Clean up /tmp/test-artifacts-spike/ after the test.</code></pre>
+
+  <p><strong>Expected output:</strong> 7 PASS lines, no FAIL lines, no TypeScript errors.</p>
+  <p><strong>Handoff condition:</strong> All 7 assertions pass. If any fail, the failure mode must be diagnosed before Step 10 begins.</p>
+  <p><strong>Dependency:</strong> Step 1 (success criteria defined before running the spike).</p>
+
+  <hr>
+
+  <h2>Step 5 · Phase F · Human Task</h2>
+  <div class="step-label">Labor: Human · [PA] Plausibility Auditing</div>
+  <p>The test script verifies what it was told to verify. The human checks whether those assertions are sufficient — whether there are failure modes the test didn't cover.</p>
+
+  <h3>Action</h3>
+  <p>Read the test output from Step 4. Check two things the test didn't:</p>
+  <ol>
+    <li><strong>Keyword parsing edge case:</strong> If a keywords meta tag has a keyword with a leading/trailing space (<code>"game, directory"</code> → <code>["game", " directory"]</code>), does the slug-derived keyword strip the space? It should. Check the raw output.</li>
+    <li><strong>Empty directory case:</strong> The test only covers two files. What if a subdirectory exists but has no <code>index.html</code>? Confirm that <code>scanArtifactsDir()</code> skips it rather than returning an entry with a null/empty artifactPath.</li>
+  </ol>
+  <p>If either check fails, log it as a bug to fix in Step 10 before the function is added to the live codebase.</p>
+  <p><strong>Handoff condition:</strong> Keyword strings are trimmed. Directories without <code>index.html</code> are skipped. Both confirmed from test output or via a follow-up test.</p>
+  <p><strong>Dependency:</strong> Step 4.</p>
+
+  <hr>
+
+  <h2>Step 6 · Phase F · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> The Zebonastic project codebase (<code>app/tools/ToolsBrowser.tsx</code> and any files that import it)</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Read-only audit of ToolsBrowser.tsx. Make no changes.
+
+1. Read app/tools/ToolsBrowser.tsx and paste the full TypeScript props interface (the type or interface that defines what the component accepts as props).
+
+2. Run:
+   grep -rn "ToolsBrowser" --include="*.tsx" --include="*.ts" .
+   List every file that imports or uses ToolsBrowser and what props it passes.
+
+3. Find the .map() call(s) inside ToolsBrowser that render tool cards. Paste the relevant 10–15 lines showing what fields are accessed on each item (e.g. item.name, item.slug, item.description, etc.).
+
+4. Answer: if we add a new optional prop artifactPath?: string to the item type, does that break any existing caller? (A caller breaks if it passes a prop that no longer exists, or if it omits a prop that becomes required.)
+
+5. The new ToolCard type we need to accept is:
+   {
+     id: string;
+     name: string;
+     description: string;
+     tags: string[];
+     source: 'filesystem' | 'database';
+     type: 'artifact' | 'link';
+     href: string;
+     artifactPath?: string;
+     externalUrl?: string;
+     openExternal: boolean;
+   }
+   
+   Write the minimal diff to ToolsBrowser.tsx that accepts ToolCard[] while keeping all existing callers working — but do not apply it yet. Return the diff only.</code></pre>
+
+  <p><strong>Expected output:</strong> The existing props interface, a list of callers, the accessed fields from the <code>.map()</code>, a clear yes/no on breaking change risk, and a minimal diff.</p>
+  <p><strong>Handoff condition:</strong> Existing props interface is documented. All callers identified. Diff produced. The human can read this output and make the decision in Step 7.</p>
+  <p><strong>Dependency:</strong> Step 1.</p>
+
+  <hr>
+
+  <h2>Step 7 · Phase F · Human Task</h2>
+  <div class="step-label">Labor: Human · [IJ] Interpretive Judgment</div>
+  <p>The audit in Step 6 surfaces facts. The decision about what to change — and whether the change is acceptable given how the rest of the codebase was built — requires someone who knows the full site and can be accountable for the result.</p>
+
+  <h3>Action</h3>
+  <p>Read the Step 6 output. Decide:</p>
+  <ul>
+    <li><strong>If ToolsBrowser is only used in <code>app/tools/page.tsx</code>:</strong> the change is safe. Apply the diff from Step 6.</li>
+    <li><strong>If ToolsBrowser is used in 2+ places with different prop shapes:</strong> the diff may need to be modified. Decide whether to: (a) extend the current type (additive, safest), (b) create a ToolCard union type, or (c) write a new component and keep the old one untouched.</li>
+    <li><strong>If ToolsBrowser uses a flat array of HtmlDocMeta directly:</strong> note which fields are currently accessed. Confirm ToolCard has all of them under the same names, or update the diff accordingly.</li>
+  </ul>
+  <p>Record the decision in a comment in the patch file before Step 11 runs.</p>
+  <p><strong>Handoff condition:</strong> A specific change strategy is chosen. The diff from Step 6 is either approved as-is or annotated with modifications.</p>
+  <p><strong>Dependency:</strong> Step 6.</p>
+
+  <hr>
+
+  <h2>Step 8 · Phase F · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>dist-smoke-test/</code> from Step 2, specifically <code>dist-smoke-test/js/user-config.js</code> and <code>dist-smoke-test/index.html</code></p>
+
+  <h3>Prompt</h3>
+  <pre><code>Add a timing probe to the smoke test build to verify that PEEP_METADATA is overwritten before any slide initialization runs.
+
+In dist-smoke-test/js/user-config.js, add these two console.log lines immediately after the PEEP_METADATA = {...} assignment:
+
+  console.log('[user-config] PEEP_METADATA set. Keys:', Object.keys(PEEP_METADATA));
+  console.log('[user-config] tft.color =', PEEP_METADATA.tft && PEEP_METADATA.tft.color);
+
+Also add this at the very top of dist-smoke-test/js/user-config.js (before the IIFE):
+  console.log('[user-config] script loaded');
+
+Then print instructions for the human to follow:
+1. Open a terminal: cd dist-smoke-test && npx http-server -p 8080
+2. Open http://localhost:8080 in a browser
+3. Open browser DevTools → Console
+4. Look for:
+   - '[user-config] script loaded' appearing in the log
+   - '[user-config] PEEP_METADATA set. Keys: [tft, all_d, all_c, grudge, prober, tf2t, pavlov, random]'
+   - '[user-config] tft.color = #4089DD'
+   - Whether these appear BEFORE or AFTER any Slideshow/PIXI log lines
+
+Do not serve the file automatically — the human must run this step manually and report what the console shows.</code></pre>
+
+  <p><strong>Expected output:</strong> Instructions printed for the human, probe lines added to user-config.js.</p>
+  <p><strong>Handoff condition:</strong> user-config.js has the probe lines added and is ready for human browser verification.</p>
+  <p><strong>Dependency:</strong> Step 2.</p>
+
+  <hr>
+
+  <h2>Step 9 · Phase F · Human Task</h2>
+  <div class="step-label">Labor: Human · [PA] Plausibility Auditing</div>
+  <p>This is the single check Claude Code cannot perform. It requires opening a browser, reading a console, and making a judgment about log order. If the overwrite happens after PIXI initializes, characters will silently display wrong colors in the live site — no error thrown.</p>
+
+  <h3>Action</h3>
+  <p>Follow the instructions from Step 8. Serve <code>dist-smoke-test/</code> and open the browser console. Look for:</p>
+  <ul>
+    <li><code>[user-config] script loaded</code> — confirms the script tag injection worked</li>
+    <li><code>[user-config] PEEP_METADATA set.</code> — confirms the overwrite executed</li>
+    <li><code>[user-config] tft.color = #4089DD</code> — confirms the correct value</li>
+    <li>Whether those three lines appear <strong>before</strong> any PIXI or Slideshow lines in the log</li>
+  </ul>
+  <p><strong>PASS:</strong> All three probe lines appear before any PIXI/Slideshow initialization.</p>
+  <p><strong>FAIL (and what to do):</strong> If probe lines appear after PIXI lines, the <code>&lt;script src="js/user-config.js"&gt;</code> injection point in <code>generate.js</code> is wrong — the tag must be moved later in <code>index.html</code>. Return to <code>generate.js</code>'s <code>patchIndexHtml()</code> function and find a script tag that loads after all PIXI dependencies but before any slide initialization.</p>
+  <p><strong>Handoff condition:</strong> All three probe lines appear in console before PIXI/Slideshow logs. The overwrite executes at the right moment.</p>
+  <p><strong>Dependency:</strong> Step 8.</p>
+
+  <hr>
+
+  <h2>Step 10 · Phase C · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>lib/html-meta.ts</code> (existing file), <code>trust-template/zebonastic-patches/lib-html-meta-addition.ts</code> (the patch to add), Step 5 bug log (if any keyword trimming or empty-directory issues were found)</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Add scanArtifactsDir() to lib/html-meta.ts. Source: trust-template/zebonastic-patches/lib-html-meta-addition.ts.
+
+Before adding:
+1. Read the existing lib/html-meta.ts — check if there is already an extractMeta or similar helper function for reading title/description/keywords from HTML. If yes, use it instead of duplicating.
+2. Check if there is already a slugify() function in lib/html-meta.ts or lib/utils.ts. If yes, use the existing one.
+3. Apply the keyword trimming fix if flagged in Step 5: ensure keywords array trims whitespace from each element.
+4. Apply the empty-directory guard if flagged in Step 5: directories without index.html are skipped.
+
+Add the function and the ArtifactMeta interface as named exports. Do not modify any existing function.
+
+After adding:
+   npx tsc --noEmit
+
+Report the compilation result. If there are type errors, paste them and fix them.</code></pre>
+
+  <p><strong>Expected output:</strong> <code>lib/html-meta.ts</code> updated with <code>scanArtifactsDir()</code> and <code>ArtifactMeta</code> as exports. <code>npx tsc --noEmit</code> exits with no errors.</p>
+  <p><strong>Handoff condition:</strong> TypeScript compilation clean. <code>scanArtifactsDir</code> and <code>ArtifactMeta</code> are named exports from <code>lib/html-meta.ts</code>.</p>
+  <p><strong>Dependency:</strong> Steps 5 (spike passed), 7 (ToolsBrowser decision made — needed before proceeding to 11).</p>
+
+  <hr>
+
+  <h2>Step 11 · Phase C · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>app/tools/ToolsBrowser.tsx</code> (existing), Step 6 audit output, Step 7 decision</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Update ToolsBrowser.tsx to accept ToolCard[] per the decision recorded in [Step 7].
+
+The ToolCard type:
+  {
+    id: string;
+    name: string;
+    description: string;
+    tags: string[];
+    source: 'filesystem' | 'database';
+    type: 'artifact' | 'link';
+    href: string;
+    artifactPath?: string;
+    externalUrl?: string;
+    openExternal: boolean;
+  }
+
+Apply the specific strategy chosen in Step 7 (additive extension, union type, or new component).
+
+In the card rendering:
+- Cards with openExternal=true: render as &lt;a href={card.href} target="_blank" rel="noopener noreferrer"&gt;
+- Cards with openExternal=false: render as &lt;Link href={card.href}&gt;
+- Artifact cards (type='artifact'): show 'Artifact' badge
+- Link cards (type='link'): show 'Link' badge
+
+Preserve: search input behavior, tag filter bar, card grid layout, all existing visual design.
+
+After the change:
+   npx tsc --noEmit
+Report any type errors and fix them.</code></pre>
+
+  <p><strong>Expected output:</strong> ToolsBrowser.tsx updated with ToolCard type support. No type errors.</p>
+  <p><strong>Handoff condition:</strong> TypeScript compilation clean. Both link and artifact card types render with correct navigation behavior.</p>
+  <p><strong>Dependency:</strong> Steps 7, 10.</p>
+
+  <hr>
+
+  <h2>Step 12 · Phase C · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>app/tools/page.tsx</code> (existing), <code>trust-template/zebonastic-patches/app-tools-page.tsx</code> (patch)</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Apply the tools/page.tsx patch from trust-template/zebonastic-patches/app-tools-page.tsx.
+
+Before applying:
+1. Read the existing app/tools/page.tsx
+2. Note any content that differs from the patch:
+   - Different page metadata (title, description)
+   - Additional database queries beyond the basic tools table fetch
+   - Any extra tool types or display logic not in the patch
+3. Merge those site-specific elements into the patch before applying
+
+Key behavior to preserve:
+- Database link tools must continue to appear alongside filesystem artifact tools
+- The page must remain a server component (no 'use client')
+
+Apply the merged file, then:
+   npx tsc --noEmit
+
+Report any type errors.</code></pre>
+
+  <p><strong>Expected output:</strong> <code>app/tools/page.tsx</code> replaced with merged version. No type errors.</p>
+  <p><strong>Handoff condition:</strong> TypeScript compilation clean. The page imports <code>scanArtifactsDir</code> from <code>lib/html-meta</code> and passes <code>ToolCard[]</code> to ToolsBrowser.</p>
+  <p><strong>Dependency:</strong> Steps 10, 11.</p>
+
+  <hr>
+
+  <h2>Step 13 · Phase C · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>app/tools/[slug]/page.tsx</code> (existing), <code>trust-template/zebonastic-patches/app-tools-slug-page.tsx</code> (patch)</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Apply the tools/[slug]/page.tsx patch from trust-template/zebonastic-patches/app-tools-slug-page.tsx.
+
+Before applying:
+1. Read the existing app/tools/[slug]/page.tsx
+2. Note any UI differences in the title bar (different styling, additional buttons, different "Back" link text) or iframe container (different height calculation, sandbox attributes)
+3. Merge those into the patch — especially preserve any existing iframe sandbox or allow attributes
+
+The critical behavior change in the patch: resolveFilesystemArtifact() tries both:
+  public/artifacts/[slug].html  (flat file — existing behavior)
+  public/artifacts/[slug]/index.html  (directory artifact — new)
+The flat path is tried first, so existing tools are not affected.
+
+Apply the merged file, then:
+   npx tsc --noEmit
+
+Report any type errors.</code></pre>
+
+  <p><strong>Expected output:</strong> <code>app/tools/[slug]/page.tsx</code> replaced with merged version. No type errors.</p>
+  <p><strong>Handoff condition:</strong> TypeScript compilation clean. <code>resolveFilesystemArtifact()</code> handles both flat and directory paths.</p>
+  <p><strong>Dependency:</strong> Step 10. (This step is independent of Steps 11–12; it can run in parallel if needed.)</p>
+
+  <hr>
+
+  <h2>Step 14 · Phase C · Human Task</h2>
+  <div class="step-label">Labor: Human · [TO] Tool Orchestration</div>
+  <p>Deciding to push to a preview branch rather than main is a tool orchestration decision. The human chooses when to expose the change to Vercel's build system — and chooses a preview branch so a build failure doesn't break the live site.</p>
+
+  <h3>Action</h3>
+  <pre><code>git checkout -b feat/directory-artifacts
+git add lib/html-meta.ts app/tools/ToolsBrowser.tsx app/tools/page.tsx app/tools/[slug]/page.tsx
+git commit -m "feat: add directory artifact discovery for trust-template games"
+git push origin feat/directory-artifacts</code></pre>
+  <p>Wait for the Vercel preview deploy to complete. Check the deploy log for build errors — specifically TypeScript compilation errors and any server component errors.</p>
+  <p>If the build fails: paste the Vercel deploy log error into Claude Code and ask it to diagnose.</p>
+  <p><strong>Handoff condition:</strong> Vercel preview build succeeds (green check in Vercel dashboard). No build errors in the deploy log.</p>
+  <p><strong>Dependency:</strong> Steps 12, 13.</p>
+
+  <hr>
+
+  <h2>Step 15 · Phase C · Human Task</h2>
+  <div class="step-label">Labor: Human · [PA] Plausibility Auditing</div>
+  <p>Regression check before adding any game. The patch should not have changed anything visible on the tools page yet — no directory artifacts exist in the repo. If something broke, it broke because of the code change, not because of new content.</p>
+
+  <h3>Action</h3>
+  <p>Navigate to the preview deployment's <code>/tools</code> page. Verify:</p>
+  <ol>
+    <li>All existing tools still appear (count them — the number should not have changed)</li>
+    <li>Tag filter bar still renders and filters correctly</li>
+    <li>Clicking an existing link tool still opens in a new tab</li>
+    <li>Clicking an existing artifact tool still navigates to <code>/tools/[slug]</code> and loads the iframe</li>
+    <li>No JavaScript console errors on page load</li>
+  </ol>
+  <p><strong>PASS:</strong> All existing tools work. Page looks identical to production except it's running the patched code.</p>
+  <p><strong>FAIL:</strong> Any existing tool disappears or its behavior changes. This means the merger in Step 12 dropped something from the original page.tsx. Return to Step 12 and fix.</p>
+  <p><strong>Handoff condition:</strong> All existing tools work on the preview deployment. Zero regressions.</p>
+  <p><strong>Dependency:</strong> Step 14.</p>
+
+  <hr>
+
+  <h2>Step 16 · Phase I · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>trust-template/generate.js</code>, <code>trust-template/example-game.json</code>, <code>./trust-source/</code> (trust game source), the Zebonastic project root path</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Deploy the evolution-of-trust starter template to the Zebonastic site.
+
+1. Create ./example-game/ containing example-game.json from trust-template/
+
+2. Run:
+   node trust-template/generate.js ./example-game ./trust-source --nextjs .
+   (This writes to ./public/artifacts/evolution-of-trust/)
+
+3. Verify the output:
+   ls -la public/artifacts/evolution-of-trust/
+   ls -la public/artifacts/evolution-of-trust/js/
+   grep -n "description\|keywords\|user-config" public/artifacts/evolution-of-trust/index.html
+
+4. Commit to the preview branch:
+   git add public/artifacts/evolution-of-trust/
+   git commit -m "feat: add evolution-of-trust starter template (trust-template reskin)"
+   git push origin feat/directory-artifacts
+
+Report the generator output, the verification results, and the git output.</code></pre>
+
+  <p><strong>Expected output:</strong> <code>public/artifacts/evolution-of-trust/</code> created with full game structure. <code>index.html</code> contains description, keywords, and user-config.js script tag. Committed and pushed to preview branch.</p>
+  <p><strong>Handoff condition:</strong> Directory exists in the repo. <code>index.html</code> passes the grep checks. Commit is on the preview branch.</p>
+  <p><strong>Dependency:</strong> Steps 3 (generator verified), 9 (overwrite timing verified), 15 (site preview stable with no regressions).</p>
+
+  <hr>
+
+  <h2>Step 17 · Phase I · Human Task</h2>
+  <div class="step-label">Labor: Human · [PA] Plausibility Auditing</div>
+  <p>The first moment the full pipeline is visible end-to-end. The card should appear; the fact that it does tells you <code>scanArtifactsDir()</code> found the directory, extracted the metadata, and ToolsBrowser rendered it correctly.</p>
+
+  <h3>Action</h3>
+  <p>After Vercel rebuilds the preview (from the Step 16 commit), navigate to <code>/tools</code>. Verify:</p>
+  <ol>
+    <li>A card labeled "The Evolution of Trust" appears in the grid</li>
+    <li>The card shows the description from <code>example-game.json</code></li>
+    <li>The card shows the keyword tags (game theory, prisoner's dilemma, ethics, ethical play)</li>
+    <li>The card is marked as an "Artifact" type (not a "Link")</li>
+    <li>The card links to <code>/tools/evolution-of-trust</code> (not to an external URL)</li>
+  </ol>
+  <p><strong>PASS:</strong> All 5 checks clear.</p>
+  <p><strong>FAIL on 1–4:</strong> <code>scanArtifactsDir()</code> or the metadata extraction failed. Add console.log to <code>scanArtifactsDir()</code> and check Vercel function logs.</p>
+  <p><strong>FAIL on 5:</strong> ToolsBrowser is still routing artifact cards to external URLs. The <code>openExternal</code> field isn't being read correctly.</p>
+  <p><strong>Handoff condition:</strong> Card appears on <code>/tools</code> with correct title, description, tags, and routing.</p>
+  <p><strong>Dependency:</strong> Step 16.</p>
+
+  <hr>
+
+  <h2>Step 18 · Phase I · Human Task</h2>
+  <div class="step-label">Labor: Human · [PA] Plausibility Auditing</div>
+  <p>The highest-stakes handoff in the build. Three independent failure modes (wrong iframe src, WebGL blocked in iframe, PD.js overwrite timing) all manifest here simultaneously. If this fails, the cause must be isolated before anything else proceeds.</p>
+
+  <h3>Action</h3>
+  <p>Click through to <code>/tools/evolution-of-trust</code>. Verify end-to-end:</p>
+  <ol>
+    <li><strong>Iframe loads:</strong> the game appears in the iframe — not a blank frame, not a 404</li>
+    <li><strong>Characters correct:</strong> characters show the colors from <code>example-game.json</code> (blue for Copycat, dark purple for Always Cheat, etc.)</li>
+    <li><strong>Payoffs correct:</strong> play one round of the iterated game — verify the coin payoffs match the defaults (R=2, T=3, S=-1, P=0)</li>
+    <li><strong>Sound works:</strong> confirm audio plays when coins are inserted (may require a user interaction first)</li>
+    <li><strong>No console errors:</strong> open browser DevTools during the game — no uncaught exceptions</li>
+  </ol>
+  <div class="risk-box">
+    <strong>Fail triage:</strong>
+    <ul style="margin-top:8px;">
+      <li>Blank iframe → <code>resolveFilesystemArtifact()</code> returned wrong path. Check network tab for the iframe src URL and 404s.</li>
+      <li>Game loads but wrong colors → <code>PEEP_METADATA</code> overwrite failed in iframe context. Check that user-config.js is present in the deployed <code>public/artifacts/evolution-of-trust/js/</code>.</li>
+      <li>Game loads but wrong payoffs → <code>PD.PAYOFFS_DEFAULT</code> assignment in user-config.js failed. Check if <code>PD</code> is in scope when user-config.js runs.</li>
+      <li>WebGL error → Check if a Content-Security-Policy header is blocking WebGL.</li>
+    </ul>
+  </div>
+  <p><strong>Handoff condition:</strong> Game loads in iframe, characters display correct colors, payoffs apply correctly, no console errors.</p>
+  <p><strong>Dependency:</strong> Step 17.</p>
+
+  <hr>
+
+  <h2>Step 19 · Phase I · Human Task</h2>
+  <div class="step-label">Labor: Human · [IJ] Interpretive Judgment</div>
+  <p>This is the gap the course is built on. Claude Code cannot evaluate whether the game works as a teaching tool. That requires playing it, having domain knowledge of how the prisoner's dilemma functions as an ethical frame, and making a judgment about whether a student who has never encountered game theory will encounter moral weight or mere strategy.</p>
+
+  <h3>Action</h3>
+  <p>Play the Evolution of Trust game end-to-end as a first-time student in Ethical Play Week 7. Ask:</p>
+  <ol>
+    <li>Is the prisoner's dilemma framing legible to someone who hasn't read about it? Does the game's narration explain the ethical stakes, or does it assume prior knowledge?</li>
+    <li>Does the tournament outcome produce a moment of felt moral weight — or does it feel like a math demonstration?</li>
+    <li>Would a student building a consequentialist reskin have a clear enough model of what they're changing (payoff structure, character behavior) versus what stays fixed (the dynamics)?</li>
+  </ol>
+  <p>This is not a pass/fail check. It's a content judgment about whether this template will serve the course. Record any observations that should inform how the STUDENT-GUIDE.md (Step 21) frames the template for students.</p>
+  <p><strong>Handoff condition:</strong> Instructor has played the game and has an opinion about whether it serves the pedagogical goal. That opinion feeds Step 20 and Step 21.</p>
+  <p><strong>Dependency:</strong> Step 18.</p>
+
+  <hr>
+
+  <h2>Step 20 · Phase B · Human Task</h2>
+  <div class="step-label">Labor: Human · [PF] Problem Formulation</div>
+  <p>The most irreducibly human step in the entire build. Claude Code can generate a trust-template reskin for any spec. It cannot decide what ethical framework a reskin should embody, which characters would best dramatize that framework, or what words.html should say to produce felt moral weight rather than ethical description. That is the course's subject matter.</p>
+
+  <h3>Action</h3>
+  <p>For each additional starter template (estimate 2–3 based on course frameworks), write a spec before Step 22 runs:</p>
+  <ul>
+    <li><strong>Ethical framework:</strong> (consequentialism / deontology / virtue ethics / contractarianism / care ethics)</li>
+    <li><strong>Title and slug</strong></li>
+    <li><strong>The prisoner's dilemma reframing:</strong> what are the two moves (cooperate/defect) in this ethical context?</li>
+    <li><strong>8 character specs:</strong> who are the actors, what strategy does each embody, what are their names/colors?</li>
+    <li><strong>The payoff reframing:</strong> what do R, T, S, P represent in this ethical context? (They can stay at 2, 3, -1, 0 — or change if the ethical framing demands it)</li>
+    <li><strong>words.html theme:</strong> one paragraph describing the narrative frame — not the full text, but enough for Claude Code to draft it</li>
+  </ul>
+  <p>This spec is the entire input to Step 22. The quality of Step 22's output is bounded by the quality of this spec.</p>
+  <p><strong>Handoff condition:</strong> Written spec for each additional template exists. Each spec names the ethical framework, the payoff reframing, and the 8 characters before Claude Code writes a line.</p>
+  <p><strong>Dependency:</strong> Step 19 (pedagogical assessment informs the spec).</p>
+
+  <hr>
+
+  <h2>Step 21 · Phase B · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> Step 3 and Step 9 results (verified generator behavior), Step 19 observations (pedagogical notes), <code>trust-template/README.md</code></p>
+
+  <h3>Prompt</h3>
+  <pre><code>Write a student-facing guide: "How to reskin a trust template with Claude Code."
+
+Save to trust-template/STUDENT-GUIDE.md.
+
+Target reader: a graduate engineering student in the Ethical Play course, Week 7 (Build I: Core Mechanic). They have a completed GDD and a chosen ethical framework. They have not worked with the trust game codebase before. They use Claude Code.
+
+Cover exactly these topics, in this order:
+1. What the template gives you (the prisoner's dilemma mechanics, free — you change who's playing and why, not how the math works)
+2. The one constraint they cannot change: each of the 8 characters must embody one of the 8 fixed strategy IDs (tft, tf2t, grudge, all_d, all_c, random, pavlov, prober). Explain this as a design constraint, not a technical limitation: the strategy behavior IS the ethical position.
+3. The three files they edit: game.json, words.html, assets/
+4. game.json step-by-step: name, color, the strategy ID assignment. One concrete example: "If your consequentialist framework casts Copycat as 'The Proportionalist,' change name to 'Proportionalist' and keep strategy: 'tft'."
+5. words.html step-by-step: how to find character name spans (&lt;span class="tft"&gt;Copycat&lt;/span&gt;), how to replace the display text. Warning: replacing the id attribute breaks the game — replace only the text inside the span.
+6. Running the generator — exact command: node generate.js ./my-game ./trust-source --nextjs /path/to/zebonastic
+7. What to do when the build fails: paste the error into Claude Code and ask: "The trust-template generator returned this error. What's wrong with my game.json?"
+
+Tone: direct. No condescension. These are graduate engineering students. The ethical architecture decisions are theirs; the technical steps are the generator's job.
+
+Length: one page. No headers beyond the 7 topics above.</code></pre>
+
+  <p><strong>Expected output:</strong> <code>trust-template/STUDENT-GUIDE.md</code>, approximately 600–800 words, covering all 7 topics, no fluff.</p>
+  <p><strong>Handoff condition:</strong> Guide covers all 7 topics. The <code>&lt;span class="tft"&gt;</code> warning is explicit. The strategy ID constraint is explained as a design constraint, not a technical one.</p>
+  <p><strong>Dependency:</strong> Steps 3, 9 (generator is verified, so the commands in the guide are accurate).</p>
+
+  <hr>
+
+  <h2>Step 22 · Phase B · Claude Task <em>(one session per additional template)</em></h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> The spec from Step 20 for this specific template, <code>trust-template/example-game.json</code> (as schema reference), <code>./trust-source/</code> (trust game source)</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Generate a trust-template reskin per this spec:
+
+[PASTE SPEC FROM STEP 20 HERE — title, slug, ethical framework, 8 character definitions, payoff reframing]
+
+Steps:
+1. Create ./[slug]/ containing game.json with:
+   - meta.title, meta.slug, meta.description matching the spec
+   - meta.keywords including the ethical framework name and 'ethical play'
+   - 8 characters: each with id matching a valid strategy ID (tft/tf2t/grudge/all_d/all_c/random/pavlov/prober), name and color from the spec, frame 0–7 (one unique frame per character)
+   - payoffs from the spec (or default 2/3/-1/0 if not specified)
+
+2. Validate the game.json before building:
+   node trust-template/generate.js ./[slug] . --validate
+
+3. If validation passes, build:
+   node trust-template/generate.js ./[slug] ./trust-source --nextjs .
+
+4. Verify: ls -la public/artifacts/[slug]/
+
+5. Commit:
+   git add public/artifacts/[slug]/
+   git commit -m "feat: add [slug] starter template ([ethical framework])"
+
+Report: any validation errors encountered, the verification output, the final commit hash.</code></pre>
+
+  <p><strong>Expected output:</strong> New game directory in <code>public/artifacts/[slug]/</code>, committed to the preview branch.</p>
+  <p><strong>Handoff condition:</strong> <code>--validate</code> passes. Generator completes without errors. Directory exists in the repo.</p>
+  <p><strong>Dependency:</strong> Steps 16 (generator is verified end-to-end), 20 (instructor spec exists).</p>
+
+  <hr>
+
+  <h2>Step 23 · Phase H · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>trust-template/generate.js</code>, observations from Steps 2 and 16 (any edge cases encountered during actual runs)</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Improve error handling in trust-template/generate.js. Apply these specific changes:
+
+1. Strip _note fields before processing: after JSON.parse(config), recursively remove any key starting with "_" from all objects. This prevents _note comment fields in game.json from causing unexpected behavior.
+
+2. Specific missing-file error: when trust-source is missing a required engine file (js/sims/PD.js, index.html), fail with: "❌ Missing required file in trust-source: [filename]. Is this the ncase/trust repository?"
+
+3. Keywords as string or array: if meta.keywords is a comma-separated string, split it into an array before validation. If it's already an array, use as-is.
+
+4. Guard against empty alias args: the current arg parsing for output-dir can match '--nextjs' itself if the user forgets the path argument. Add a check: if the output-dir argument starts with '--', it's a flag not a path — fail with a clear error.
+
+5. Add --dry-run flag: when present, print what would be copied/generated without writing any files. Format:
+   [dry-run] Would copy: ./trust-source/js → ./dist/js
+   [dry-run] Would generate: ./dist/js/user-config.js
+   [dry-run] Would write: ./dist/index.html (patched)
+
+After changes:
+- Run with example-game.json: node generate.js ./example-game ./trust-source --dry-run
+- Run with a broken game.json (remove the 'tft' character): verify the error message is specific
+- Report all outputs</code></pre>
+
+  <p><strong>Expected output:</strong> Updated <code>generate.js</code> with 5 improvements. All three test runs produce expected output.</p>
+  <p><strong>Handoff condition:</strong> <code>--dry-run</code> works. Broken game.json produces specific error naming the missing strategy. <code>_note</code> fields don't cause validation errors.</p>
+  <p><strong>Dependency:</strong> Steps 2, 16 (real runs have surfaced actual edge cases by now).</p>
+
+  <hr>
+
+  <h2>Step 24 · Phase H · Human Task</h2>
+  <div class="step-label">Labor: Human · [TO] Tool Orchestration</div>
+  <p>Deciding how the tool fails is a pedagogical decision, not a technical one. A generator that warns-and-continues with defaults may produce a game that runs but encodes the wrong ethical framing — and the student won't know. A generator that fails loudly may frustrate students who want to iterate quickly. The instructor decides which failure mode serves the course.</p>
+
+  <h3>Action</h3>
+  <p>Decide the error behavior policy for student-facing generator runs:</p>
+  <ul>
+    <li><strong>Loud (recommended for this course):</strong> Any validation error in game.json stops the build with a clear error message and exit code 1. Warnings that don't affect correctness (missing <code>description</code>, <code>shortName</code>) print but don't stop the build.</li>
+    <li><strong>Silent:</strong> All errors print as warnings, defaults applied, build continues. The game runs but may not encode the intended ethical architecture.</li>
+  </ul>
+  <p>For the Ethical Play course, the design decision is the student's core deliverable. A generator that silently patches their mistakes is pedagogically counterproductive.</p>
+  <p><strong>Handoff condition:</strong> Decision is recorded. Claude Code implements it in Step 25.</p>
+  <p><strong>Dependency:</strong> Step 23.</p>
+
+  <hr>
+
+  <h2>Step 25 · Phase H · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>trust-template/generate.js</code>, decision from Step 24</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Implement the error behavior policy decided in [Step 24] consistently across generate.js.
+
+If the decision was FAIL LOUD (expected):
+- All errors in validate() cause process.exit(1) with a specific message
+- Warnings print with ⚠ but the build continues
+- Error messages must include: the field path, the invalid value, and what a valid value looks like. Example: "❌ characters[2].strategy: 'tft' is already used by characters[0]. Each strategy must appear exactly once. Valid strategies: tft, tf2t, grudge, all_d, all_c, random, pavlov, prober"
+
+Apply this standard to every error currently in the validate() function. Check that none of the existing error messages are vague (e.g., "invalid strategy" is vague; "unknown strategy 'tft2' — did you mean tf2t?" is specific).
+
+After changes:
+- Test with a game.json that has a duplicate strategy: verify the error names both characters
+- Test with a game.json that's valid: verify the build completes without printing any errors
+- Report both test outputs</code></pre>
+
+  <p><strong>Expected output:</strong> Updated <code>generate.js</code> with specific, actionable error messages. Both test cases produce expected behavior.</p>
+  <p><strong>Handoff condition:</strong> Error messages name the exact field, the invalid value, and the valid options. Valid game.json produces clean output with no errors.</p>
+  <p><strong>Dependency:</strong> Step 24.</p>
+
+  <hr>
+
+  <h2>Step 26 · Phase R · Human Task</h2>
+  <div class="step-label">Labor: Human · [EI] Executive Integration</div>
+  <p>This is the one step where all four other supervisory capacities are exercised simultaneously. The human must hold the generator, the site patches, the student workflow, and the course taxonomy together and confirm they form a coherent whole before merging to main.</p>
+
+  <h3>Action</h3>
+  <pre><code>git checkout main
+git merge feat/directory-artifacts
+git push origin main</code></pre>
+  <p>After Vercel deploys main:</p>
+  <ol>
+    <li><code>/tools</code> — all starter templates appear with correct tags. Tag filter "ethical play" returns all course templates.</li>
+    <li><code>/tools/evolution-of-trust</code> (and each additional template from Step 22) — iframe loads, game plays correctly.</li>
+    <li><code>/sitemap.xml</code> — the new tool slugs appear in the sitemap.</li>
+    <li><strong>Taxonomy check:</strong> the keywords in each game.json align with how the Ethical Play course syllabus describes those frameworks. A student searching by "consequentialism" or "prisoner's dilemma" on <code>/tools</code> would find the right template.</li>
+    <li><strong>Student workflow check:</strong> hand the STUDENT-GUIDE.md to one student or TA and ask them to follow it. Do they hit any step where the instructions don't match what they see?</li>
+  </ol>
+  <p><strong>Handoff condition:</strong> All templates visible on <code>/tools</code> with correct tags. All iframes load. Sitemap updated. Taxonomy terms in keywords match course vocabulary. STUDENT-GUIDE.md survives a first reader.</p>
+  <p><strong>Dependency:</strong> All prior steps.</p>
+
+  <hr>
+
+  <h2>Score Summary</h2>
+  <table>
+    <thead><tr><th></th><th>Count</th><th>%</th></tr></thead>
+    <tbody>
+      <tr><td>Total steps</td><td>26</td><td>—</td></tr>
+      <tr><td>Claude tasks</td><td>13</td><td>50%</td></tr>
+      <tr><td>Human tasks</td><td>13</td><td>50%</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Critical Path</h2>
+  <p>The longest dependency chain — any delay cascades:</p>
+  <p><strong>Step 1 → 2 → 3 → 8 → 9 → 16 → 17 → 18 → 19 → 26</strong></p>
+  <p>Ten steps. Steps 3, 9, 18, and 19 are all human tasks on this path. The build cannot be fully automated — four browser/play checks are on the critical path and each one gates the next.</p>
+
+  <h2>Highest-Risk Handoffs</h2>
+
+  <div class="risk-box">
+    <strong>Step 18 — PA: Full game playthrough on preview.</strong> Three independent failure modes manifest simultaneously: wrong iframe src (routing bug), WebGL blocked in iframe (Vercel CSP headers), PEEP_METADATA overwrite timing (script load order). If the game fails here, diagnosing <em>which</em> of the three failed requires systematic isolation. The risk is that all three look the same from outside the browser console: a broken or blank game.
+  </div>
+
+  <div class="risk-box">
+    <strong>Step 9 — PA: PD.js overwrite timing.</strong> If <code>PEEP_METADATA</code> is consumed by any PIXI initialization that runs before <code>user-config.js</code> finishes parsing, characters will display original colors silently. No error is thrown. The only evidence is the wrong color on screen. This spike exists specifically to catch this failure mode before it reaches the live site.
+  </div>
+
+  <div class="risk-box">
+    <strong>Step 7 — IJ: ToolsBrowser props decision.</strong> <code>ToolsBrowser.tsx</code> was written without seeing its full context in the codebase. If the component is used in 3+ places with different prop shapes, the Step 11 change could cascade into multiple type errors not visible until the Vercel build runs. The Step 6 audit exists to surface this risk; Step 7 is where the human decides how to handle it.
+  </div>
+
+  <h2>Supervisory Capacity Distribution</h2>
+  <table>
+    <thead><tr><th>Capacity</th><th>Steps</th><th>Count</th></tr></thead>
+    <tbody>
+      <tr><td>[PA] Plausibility Auditing</td><td>3, 5, 9, 15, 17, 18</td><td>6</td></tr>
+      <tr><td>[PF] Problem Formulation</td><td>1, 20</td><td>2</td></tr>
+      <tr><td>[TO] Tool Orchestration</td><td>14, 24</td><td>2</td></tr>
+      <tr><td>[IJ] Interpretive Judgment</td><td>7, 19</td><td>2</td></tr>
+      <tr><td>[EI] Executive Integration</td><td>26</td><td>1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="flag-box">
+    <strong>FLAG — [EI] appears only once.</strong> A build where executive integration happens only at the release step is fragile. There is no mid-build moment where the human has explicitly held all the threads together. Recommend: treat Step 19 (pedagogical judgment) as a lightweight EI checkpoint — add an explicit check at that step for whether the generator output, the site patches, and the student workflow are coherent as a system, not just individually correct.
+  </div>
+
+  <h2>What Is Missing from This Score</h2>
+  <ul>
+    <li><strong><code>/tasks</code> implementation document</strong> has not been generated. When Step 20 produces specs for additional templates, a full ticket breakdown (parallel tracks for each template build) would clarify ordering. Run <code>/tasks</code> after Step 20 completes.</li>
+    <li><strong>Step 22 prompts are placeholders.</strong> The spec from Step 20 fills in the <code>[PASTE SPEC]</code> placeholder. Step 22 cannot be a real prompt until the instructor has made the pedagogical decisions in Step 20.</li>
+    <li><strong>CI validation step is missing.</strong> Nothing in this build prevents a student from pushing a broken <code>game.json</code> or a game that overwrites another student's slug. If multiple students are deploying to the same Zebonastic repo, a slug collision protection step and a pre-push validation hook belong in the Hardening phase. This score does not include them — add them when the multi-student workflow is defined.</li>
+  </ul>
+
+  <p class="closing-line">The SDD is the music. This score is who plays what, in what order, and when to listen for the wrong note.</p>
+
+  <footer>
+    Built with <a href="https://www.bearbrown.co">bearbrown.co</a> · AI tools for educators, creators &amp; founders
+  </footer>
+
+</div>
+</body>
+</html>

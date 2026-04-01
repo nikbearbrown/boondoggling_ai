@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boondoggle Score — The Network</title>
+  <meta name="description" content="Deployment score for The Network, the Care Ethics template in the Glimmer ethical play system. Covers Claude Code deploy task, human QA steps, bridge severance calibration, and final system release checklist.">
+  <meta name="keywords" content="boondoggle, the network, care ethics, ethical play, glimmer, deployment, game design, zebonastic">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bb-1: #1a0a00;
+      --bb-2: #8B3A0F;
+      --bb-3: #C0392B;
+      --bb-4: #E8A020;
+      --bb-5: #D4500A;
+      --bb-6: #B8860B;
+      --bb-7: #C8A96E;
+      --bb-8: #F0E6D0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--bb-1);
+      background: var(--bb-8);
+      padding: 48px 24px 80px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    h1 { font-size: 2rem; color: var(--bb-2); margin-bottom: 8px; line-height: 1.2; }
+    h2 { font-size: 1.25rem; color: var(--bb-2); margin: 48px 0 16px; border-bottom: 1px solid var(--bb-7); padding-bottom: 8px; }
+    h3 { font-size: 1rem; color: var(--bb-5); margin: 28px 0 10px; font-weight: 600; }
+    h4 { font-size: 0.9rem; color: var(--bb-6); margin: 20px 0 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    p { margin-bottom: 14px; }
+    ul, ol { margin: 0 0 14px 1.5em; }
+    li { margin-bottom: 4px; }
+
+    strong { color: var(--bb-1); font-weight: 600; }
+    em { font-style: italic; }
+
+    blockquote {
+      border-left: 3px solid var(--bb-7);
+      margin: 20px 0;
+      padding: 12px 20px;
+      color: var(--bb-6);
+      font-style: italic;
+      background: rgba(200,169,110,0.12);
+    }
+
+    pre {
+      background: #fff8f0;
+      border: 1px solid var(--bb-7);
+      border-radius: 4px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.82em;
+      color: var(--bb-5);
+    }
+
+    pre code {
+      font-size: 0.78rem;
+      color: var(--bb-1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--bb-7);
+      color: var(--bb-1);
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 12px;
+    }
+
+    td {
+      border-bottom: 1px solid var(--bb-7);
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .meta {
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      color: var(--bb-6);
+      margin-bottom: 4px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--bb-7);
+      margin: 36px 0;
+    }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 20px;
+      border-top: 1px solid var(--bb-7);
+      font-size: 0.8rem;
+      color: var(--bb-6);
+      text-align: center;
+    }
+
+    footer a { color: var(--bb-6); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>BOONDOGGLE SCORE</h1>
+
+  <p class="meta"><strong>System:</strong> The Network — Care Ethics template for Ethical Play</p>
+  <p class="meta"><strong>Score generated:</strong> 2026-04-01</p>
+  <p class="meta"><strong>Team Claude fluency:</strong> Level III — Claude Code</p>
+  <p class="meta"><strong>Deployment target:</strong> Vercel (Zebonastic) → <code>public/games/the-network/</code></p>
+
+  <blockquote>Fifth and final Glimmer template. Pipeline is proven. The new risk is specific to this engine: bridge severance timing. With Sam starting at 65 and decaying ~5/turn when ignored, she severs around week 6 — earlier than the "turn 8-10" target in the spec. Step 3 determines whether this needs calibration before student use.</blockquote>
+
+  <hr>
+
+  <h2>STEP 1 · PHASE C · CLAUDE TASK</h2>
+
+  <p><strong>LABOR:</strong> Claude Code<br>
+  <strong>CONTEXT REQUIRED:</strong> <code>glimmer-care-ethics/generate.js</code>, <code>glimmer-care-ethics/index.html</code>, <code>glimmer-care-ethics/example-game.json</code>, Zebonastic project root</p>
+
+  <h4>Prompt</h4>
+<pre><code>Deploy The Network game to the Zebonastic site.
+
+1. Install canvas if not already present:
+   npm list canvas || npm install canvas
+
+2. Copy game files:
+   glimmer-care-ethics/index.html
+   glimmer-care-ethics/generate.js
+   glimmer-care-ethics/example-game.json → rename to game.json
+
+3. Validate:
+   node glimmer-care-ethics/generate.js \
+     glimmer-care-ethics \
+     glimmer-care-ethics/index.html \
+     --validate
+
+   Expected: clean pass (6 relationships, 2 bridges, 12 turns).
+   Any errors → stop and report.
+
+4. Deploy:
+   node glimmer-care-ethics/generate.js \
+     glimmer-care-ethics \
+     glimmer-care-ethics/index.html \
+     --nextjs .
+
+5. Verify:
+   ls -la public/games/the-network/
+   ls -la public/games/the-network/assets/
+   grep "_mechanic_argument" public/games/the-network/user-config.js
+   grep "bridge_critical_threshold" public/games/the-network/user-config.js
+
+   Expected:
+   - index.html, user-config.js, assets/ with 6 PNGs
+   - _mechanic_argument in comment only
+   - bridge_critical_threshold: 35
+
+6. Commit:
+   git add public/games/the-network/
+   git commit -m "feat: add the-network starter template (care ethics, relationship network)"
+   git push origin main
+
+Report: validation output, directory listing, grep results, commit hash.</code></pre>
+
+  <p><strong>EXPECTED OUTPUT:</strong> <code>public/games/the-network/</code> deployed with 6 placeholder PNGs (alex, maya, sam, jordan, devon, riley). Committed to main.</p>
+  <p><strong>HANDOFF CONDITION:</strong> Directory exists. Six PNGs in assets. <code>bridge_critical_threshold: 35</code> in user-config. Commit pushed.</p>
+  <p><strong>DEPENDENCY:</strong> None.</p>
+
+  <hr>
+
+  <h2>STEP 2 · PHASE F · HUMAN TASK</h2>
+
+  <p><strong>LABOR:</strong> Human<br>
+  <strong>SUPERVISORY CAPACITY:</strong> [PA] — Plausibility Auditing: verify the game loads and the network renders correctly. Bridge visual is the key check.</p>
+
+  <h4>Action</h4>
+
+  <p><strong>Check 1 — Card on <code>/games</code>:</strong><br>
+  Card labeled "The Network" appears. Tags include "care ethics" and "ethical play."</p>
+
+  <p><strong>Check 2 — Intro screen:</strong><br>
+  Six relationships listed, Sam and Devon marked as "Bridge." Token count shows 3.</p>
+
+  <p><strong>Check 3 — Network layout:</strong><br>
+  Click Begin. Verify three-column layout: Engineering (Alex, Maya) | Bridges (Sam, Devon) | Extended (Jordan, Riley). Each card shows strength bar, need bar, and stepper.</p>
+
+  <p><strong>Check 4 — Token allocation:</strong><br>
+  Add tokens to relationships. Verify: next-week button disabled until all 3 tokens placed. Steppers prevent placing more than total available.</p>
+
+  <p><strong>Check 5 — Bridge visual warning:</strong><br>
+  Play several turns ignoring Sam. Verify Sam's card border changes to amber (warn) around strength 55, then red (danger) approaching threshold 35.</p>
+
+  <p><strong>Check 6 — Severance fires:</strong><br>
+  Continue ignoring Sam until sever. Verify:</p>
+  <ul>
+    <li>Red alert banner appears: "Sam: connection severed. The clusters they connected are now isolated."</li>
+    <li>Sam's card shows "CONNECTION SEVERED" in red with stepper disabled</li>
+    <li>Product cluster members (Jordan) show elevated need bars in subsequent turns</li>
+    <li>Reveal fires after turn 12</li>
+  </ul>
+
+  <h4>Fail Triage</h4>
+  <ul>
+    <li><strong>Network renders as single column</strong> → CSS grid not loading. Check browser, may be viewport width issue.</li>
+    <li><strong>Tokens can't be placed</strong> → <code>state.rels[id].severed</code> check blocking valid rels. Check console.</li>
+    <li><strong>Sever alert doesn't appear</strong> → <code>simulate()</code> not detecting threshold crossing. Open console, type <code>state.severedBridges</code> after a suspect turn.</li>
+    <li><strong>Jordan's need doesn't spike after Sam severs</strong> → <code>fragmentation_bonus</code> not accumulating. Check <code>state.rels.jordan.fragBonus</code> in console.</li>
+  </ul>
+
+  <p><strong>HANDOFF CONDITION:</strong> Network renders in three columns. Tokens allocate correctly. Sam severs visually with alert. Jordan's need escalates post-severance. Reveal appears after turn 12.</p>
+  <p><strong>DEPENDENCY:</strong> Step 1.</p>
+
+  <hr>
+
+  <h2>STEP 3 · PHASE H · HUMAN TASK</h2>
+
+  <p><strong>LABOR:</strong> Human<br>
+  <strong>SUPERVISORY CAPACITY:</strong> [IJ] — Interpretive Judgment: the bridge timing calibration.</p>
+
+  <h4>Action</h4>
+
+  <p>Play two paths and record when Sam severs.</p>
+
+  <p><strong>Path A — Ignore Sam completely</strong> (give all tokens to Alex, Maya, Jordan, Riley):<br>
+  Record the turn Sam's connection severs. Target is turns 8–10. If it severs at turn 5–6, the player hasn't had enough turns to feel invested in the other relationships before the collapse. If it severs at turn 6 exactly, that may still be acceptable — assess whether the glimmer lands or whether it feels premature.</p>
+
+  <p><strong>Path B — Give Sam exactly 1 token every 3 turns:</strong><br>
+  With Sam's decay rate (~5/turn without tokens, +8 per token), 1 token every 3 turns gives net: +8 - 15 = -7 over 3 turns, or -2.3/turn. Starting at 65, this reaches 35 around turn 13 — just past the game end. Does this feel like enough attention to "maintain" Sam, or does it feel like neglect that barely holds?</p>
+
+  <p><strong>The judgment call:</strong> does the severance timing produce the right emotional moment? The glimmer requires the player to feel they had enough time to understand the network before it breaks — not a surprise in week 4, but a discovery in week 9.</p>
+
+  <p><strong>If Sam severs too early (turn 5–6):</strong> increase Sam's <code>starting_strength</code> from 65 to 72 in <code>game.json</code>, regenerate, redeploy. This buys 1–2 more turns before threshold.</p>
+
+  <p><strong>If Sam never severs in typical play:</strong> decrease <code>starting_strength</code> or increase <code>bridge_critical_threshold</code> from 35 to 42. Retest.</p>
+
+  <p><strong>The partial justice reveal:</strong> also check whether <code>getProximityBias()</code> fires correctly. Play a run where you give all tokens to Alex and Maya (engineering cluster only). Verify the reveal includes the bias block text about the engineering cluster.</p>
+
+  <p><strong>HANDOFF CONDITION:</strong> Sam severs in a range the instructor considers emotionally effective. Proximity bias fires correctly when engineering cluster is over-attended. Both calibrations documented before student use.</p>
+  <p><strong>DEPENDENCY:</strong> Step 2.</p>
+
+  <hr>
+
+  <h2>STEP 4 · PHASE R · HUMAN TASK</h2>
+
+  <p><strong>LABOR:</strong> Human<br>
+  <strong>SUPERVISORY CAPACITY:</strong> [EI] — Executive Integration: all five Glimmer templates live.</p>
+
+  <h4>Action</h4>
+  <ul>
+    <li><code>/games</code> shows all six games: Evolution of Trust, Veil of Ignorance, The Cobra Effect, The Rule, Character Drift, The Network</li>
+    <li>Tag filter "ethical play" returns all six</li>
+    <li>Tag filter "care ethics" returns only The Network</li>
+    <li>Each of the five Glimmer templates returns exactly one game for its framework tag</li>
+    <li>The Network card description: <em>"Distribute care across a network of relationships. Discover who holds it together."</em></li>
+    <li>Week 8 syllabus check: keywords (<code>care ethics</code>, <code>relationships</code>, <code>network</code>, <code>attention</code>, <code>ethical play</code>) match course vocabulary</li>
+  </ul>
+
+  <h4>Final System Check</h4>
+  <p>The five Glimmer templates now cover all five frameworks:</p>
+
+  <table>
+    <thead>
+      <tr><th>Framework</th><th>Template</th><th>Slug</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Contractarianism</td><td>Veil of Ignorance</td><td><code>veil-of-ignorance</code></td></tr>
+      <tr><td>Consequentialism</td><td>The Cobra Effect</td><td><code>cobra-effect</code></td></tr>
+      <tr><td>Deontology</td><td>The Rule</td><td><code>the-rule</code></td></tr>
+      <tr><td>Virtue Ethics</td><td>Character Drift</td><td><code>character-drift</code></td></tr>
+      <tr><td>Care Ethics</td><td>The Network</td><td><code>the-network</code></td></tr>
+    </tbody>
+  </table>
+
+  <p>Confirm all five slugs resolve correctly in the browser before calling the system released.</p>
+
+  <p><strong>HANDOFF CONDITION:</strong> All six games live and tagged correctly. All five framework tags return exactly one Glimmer template. System released.</p>
+  <p><strong>DEPENDENCY:</strong> Step 3.</p>
+
+  <hr>
+
+  <h2>SCORE SUMMARY</h2>
+
+  <table>
+    <thead>
+      <tr><th></th><th>Count</th><th>%</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Total steps</td><td>4</td><td>—</td></tr>
+      <tr><td>Claude tasks</td><td>1</td><td>25%</td></tr>
+      <tr><td>Human tasks</td><td>3</td><td>75%</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <h2>The specific risk for this engine</h2>
+
+  <p><strong>Bridge severance timing.</strong></p>
+
+  <p>Sam's current calibration: starting_strength 65, decay ~5/turn when ignored, threshold 35. This severs at turn 6 if completely ignored. The spec targets turns 8–10.</p>
+
+  <p>The fix is a <code>game.json</code> edit: raise <code>starting_strength</code> to 72–75. The generator's <code>user-config.js</code> includes a calibration comment with the exact math. Step 3 determines whether the adjustment is needed.</p>
+
+  <p><strong>The second risk: the deterministic need function.</strong></p>
+
+  <p><code>getNeed()</code> uses a hash of turn number and relationship ID to produce consistent, non-random need values. This means every playthrough produces the same need levels for each relationship on each turn. This is by design — it ensures the glimmer is reliable, not luck-dependent. But it also means a player who replays the game will notice the pattern immediately.</p>
+
+  <p>For a course context where each student plays once and makes a design choice, determinism is the right call. Note this in the STUDENT-GUIDE: the game is designed to be played once, not optimized through repetition.</p>
+
+  <hr>
+
+  <h2>What the completed Glimmer system now is</h2>
+
+  <p>Five engines. Five ethical arguments. One deploy pattern. One <code>generate.js</code> per template. One <code>game.json</code> schema per template. One STUDENT-GUIDE still to write per template (after instructor play-test judgment at Step 3 of each boondoggle).</p>
+
+  <p>The generator pattern is proven across five builds. The pipeline from <code>game.json</code> → <code>user-config.js</code> → deployed game is consistent. A student with Claude Code and a <code>game.json</code> can deploy a new scenario to <code>/games/[slug]</code> in under 10 minutes.</p>
+
+  <p>The mechanic arguments are engine-fixed and cannot be overwritten:</p>
+  <ul>
+    <li>Veil: <em>"A system that feels fair to its designer…"</em></li>
+    <li>Cobra Effect: <em>"When a measure becomes a target…"</em></li>
+    <li>The Rule: <em>"A rule that bends for magnitude is not a rule…"</em></li>
+    <li>Character Drift: <em>"You are not what you decided today…"</em></li>
+    <li>The Network: <em>"Care is finite. How it is distributed is not neutral…"</em></li>
+  </ul>
+
+  <p>These five sentences are what the course is building toward. The games are the delivery mechanism.</p>
+
+</div>
+
+<footer>
+  Built with <a href="https://www.bearbrown.co">bearbrown.co</a> · AI tools for educators, creators &amp; founders
+</footer>
+</body>
+</html>

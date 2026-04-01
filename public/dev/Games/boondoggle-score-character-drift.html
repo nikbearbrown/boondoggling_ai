@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boondoggle Score — Character Drift</title>
+  <meta name="description" content="Boondoggle Score for Character Drift, a virtue ethics game in the Ethical Play series. Documents the four-step deployment pipeline, playtesting risks, and dominant-pattern threshold calibration for the Zebonastic site.">
+  <meta name="keywords" content="boondoggle score, character drift, virtue ethics, ethical play, game deployment, zebonastic, pipeline">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bb-1: #1a0a00;
+      --bb-2: #8B3A0F;
+      --bb-3: #C0392B;
+      --bb-4: #E8A020;
+      --bb-5: #D4500A;
+      --bb-6: #B8860B;
+      --bb-7: #C8A96E;
+      --bb-8: #F0E6D0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bb-8);
+      color: var(--bb-1);
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 48px 24px;
+    }
+    .container { max-width: 760px; margin: 0 auto; }
+
+    h1 { font-size: 2rem; font-weight: 600; color: var(--bb-2); margin-bottom: 8px; }
+    h2 { font-size: 1.25rem; font-weight: 600; color: var(--bb-2); margin: 40px 0 12px; border-bottom: 1px solid var(--bb-7); padding-bottom: 6px; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--bb-5); margin: 24px 0 8px; }
+
+    p { margin-bottom: 12px; }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    blockquote {
+      border-left: 4px solid var(--bb-4);
+      padding: 12px 20px;
+      margin: 20px 0;
+      background: rgba(232,160,32,0.08);
+      border-radius: 0 4px 4px 0;
+      color: var(--bb-1);
+    }
+
+    ul, ol { padding-left: 1.5em; margin-bottom: 12px; }
+    li { margin-bottom: 4px; }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85em;
+      background: rgba(200,169,110,0.25);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--bb-2);
+    }
+    pre {
+      background: rgba(200,169,110,0.2);
+      border: 1px solid var(--bb-7);
+      border-radius: 4px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.8em;
+      color: var(--bb-1);
+      line-height: 1.6;
+    }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; }
+    th { background: var(--bb-2); color: var(--bb-8); padding: 10px 14px; text-align: left; font-weight: 600; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--bb-7); }
+    tr:last-child td { border-bottom: none; }
+
+    .meta-block {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--bb-6);
+      margin-bottom: 32px;
+      line-height: 2;
+    }
+
+    .step-label {
+      display: inline-block;
+      background: var(--bb-5);
+      color: #fff;
+      font-size: 0.7rem;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+
+    .risk-box {
+      border-left: 4px solid var(--bb-3);
+      background: rgba(192,57,43,0.06);
+      padding: 16px 20px;
+      border-radius: 0 4px 4px 0;
+      margin: 20px 0;
+    }
+
+    hr { border: none; border-top: 1px solid var(--bb-7); margin: 32px 0; }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 20px;
+      border-top: 1px solid var(--bb-7);
+      color: var(--bb-6);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--bb-6); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Boondoggle Score</h1>
+
+  <div class="meta-block">
+    <div><strong>System:</strong> Character Drift — Virtue Ethics template for Ethical Play</div>
+    <div><strong>Score generated:</strong> 2026-04-01</div>
+    <div><strong>Team Claude fluency:</strong> Level III — Claude Code</div>
+    <div><strong>Deployment target:</strong> Vercel (Zebonastic) → <code>public/games/character-drift/</code></div>
+  </div>
+
+  <blockquote>Fourth game through the pipeline. One Claude task, three human tasks. The new risk is specific to this engine: the glimmer depends on blocking happening at Turn 10, which requires a dominant pattern to form by turn 10. Low player count means no playtesting data yet on whether the blocking reliably triggers.</blockquote>
+
+  <hr>
+
+  <h2>Step 1 · Phase C · Claude Task</h2>
+  <div class="step-label">Labor: Claude Code</div>
+  <p><strong>Context required:</strong> <code>glimmer-virtue-ethics/generate.js</code>, <code>glimmer-virtue-ethics/index.html</code>, <code>glimmer-virtue-ethics/example-game.json</code>, Zebonastic project root</p>
+
+  <h3>Prompt</h3>
+  <pre><code>Deploy the Character Drift game to the Zebonastic site.
+
+1. Install canvas if not already present:
+   npm list canvas || npm install canvas
+
+2. Copy game files:
+   glimmer-virtue-ethics/index.html
+   glimmer-virtue-ethics/generate.js
+   glimmer-virtue-ethics/example-game.json → rename to game.json
+
+3. Validate:
+   node glimmer-virtue-ethics/generate.js \
+     glimmer-virtue-ethics \
+     glimmer-virtue-ethics/index.html \
+     --validate
+
+   Expected: one warning (Turn 2 no virtuous option — correct, intentional).
+   Any errors → stop and report.
+
+4. Deploy:
+   node glimmer-virtue-ethics/generate.js \
+     glimmer-virtue-ethics \
+     glimmer-virtue-ethics/index.html \
+     --nextjs .
+
+5. Verify:
+   ls -la public/games/character-drift/
+   grep "_mechanic_argument" public/games/character-drift/user-config.js
+   grep "drift_check_turns" public/games/character-drift/user-config.js
+
+   Expected:
+   - index.html, user-config.js, assets/
+   - _mechanic_argument appears only in the comment
+   - drift_check_turns: [4, 7, 10]
+
+6. Commit:
+   git add public/games/character-drift/
+   git commit -m "feat: add character-drift starter template (virtue ethics)"
+   git push origin main
+
+Report: validation output, directory listing, grep results, commit hash.</code></pre>
+
+  <p><strong>Expected output:</strong> <code>public/games/character-drift/</code> deployed. <code>drift_check_turns</code> in user-config confirms engine receives correct check points. Committed to main.</p>
+  <p><strong>Handoff condition:</strong> Directory exists. <code>_mechanic_argument</code> comment-only. <code>drift_check_turns</code> array present in user-config. Commit pushed.</p>
+  <p><strong>Dependency:</strong> None.</p>
+
+  <hr>
+
+  <h2>Step 2 · Phase F · Human Task</h2>
+  <div class="step-label">Labor: Human · [PA] Plausibility Auditing</div>
+  <p>Verify the card and game load correctly. One additional check specific to this engine.</p>
+
+  <h3>Action</h3>
+  <p><strong>Check 1 — Card on <code>/games</code>:</strong> Card labeled "Character Drift" appears. Tags include "virtue ethics" and "ethical play."</p>
+  <p><strong>Check 2 — Intro screen:</strong> Navigate to <code>/games/character-drift</code>. Verify three-step how-it-works explanation is visible. Begin button present.</p>
+  <p><strong>Check 3 — Turn pips:</strong> After clicking Begin, verify 10 turn pips appear at top. Current turn pip is filled. No drift badge visible on Turn 1.</p>
+  <p><strong>Check 4 — Drift badge appears on Turn 4:</strong> Play through Turns 1–3 (any choices). On Turn 4, verify the amber "Character check" badge appears in the header.</p>
+  <p><strong>Check 5 — Blocking fires correctly:</strong> Play Turns 1–3 with "Defers to authority" choices (Turn 3: "Present as asked"). On Turn 4, verify "Back the technically correct solution" (Acts on principle) shows the lock icon and reason: <em>"This choice conflicts with your established pattern of: Defers to authority."</em></p>
+  <p>Note: blocking at Turn 4 requires Defers to authority to be the PLURALITY card. Test this specific path:</p>
+  <ul>
+    <li>Turn 1: "Reassign work" (Prioritizes delivery over people)</li>
+    <li>Turn 2: "Cut tooling" (Absorbs cost to protect people)</li>
+    <li>Turn 3: "Present as asked" (Defers to authority) — now dominant: each type has 1, but… tie. No dominant.</li>
+  </ul>
+  <p>This is the risk. See Step 3.</p>
+  <p><strong>Handoff condition:</strong> Game loads, pips render, drift badge appears at Turn 4, character stack accumulates. Even if blocking doesn't fire on the test path above, the visual system is working.</p>
+  <p><strong>Dependency:</strong> Step 1.</p>
+
+  <hr>
+
+  <h2>Step 3 · Phase H · Human Task</h2>
+  <div class="step-label">Labor: Human · [IJ] Interpretive Judgment</div>
+  <p>The highest-risk design question for this engine. Play three specific paths and record what happens at Turn 10.</p>
+
+  <h3>Path A — Pure deference</h3>
+  <p>Select "Defers to authority" wherever possible:</p>
+  <ul>
+    <li>Turn 3: "Present as asked"</li>
+    <li>Turn 4: "Escalate to your manager"</li>
+    <li>Turn 6: "Implement it fully and without visible resistance"</li>
+    <li>Turn 8: "Let it go"</li>
+    <li>Turn 9: "Bring it to HR"</li>
+    <li>Turn 10: Does "Report it now" show as locked?</li>
+  </ul>
+
+  <h3>Path B — Pure delivery priority</h3>
+  <p>Select "Prioritizes delivery over people" wherever possible:</p>
+  <ul>
+    <li>Turn 1: "Reassign their work"</li>
+    <li>Turn 2: "End the contractor"</li>
+    <li>Turn 5: "Raise it yourself"</li>
+    <li>Turn 7: "Focus on your own team"</li>
+    <li>Turn 9: "Ask them to stay through the launch"</li>
+    <li>Turn 10: Does "Report it now" (Acts on principle) unlock? Or does "Support their decision" (Protects people) lock?</li>
+  </ul>
+
+  <h3>Path C — Mixed</h3>
+  <p>Alternate between types. Turn 10: record what happens. Does anything lock?</p>
+
+  <div class="risk-box">
+    <strong>The judgment call:</strong> Does Turn 10 blocking happen reliably enough to produce the glimmer? With 10 turns and multiple card types, a player who makes varied choices may never establish a dominant pattern — meaning nothing blocks at Turn 10 and the glimmer doesn't land.
+    <br><br>
+    If Turn 10 blocking fires on Path A but not Path B or C: acceptable — Path A is the intended glimmer path. If it fires on none: the <code>incompatible_patterns</code> need adjustment. If it fires on all three: the dominance threshold may be too easy to hit.
+    <br><br>
+    Record: does the <code>consistent_severe</code> reveal state (3+ blocks across all three drift checks) appear for any path? That state has the strongest reveal text. If no path produces it, the game's most powerful moment is unreachable.
+  </div>
+
+  <p><strong>Handoff condition:</strong> At least Path A produces Turn 10 blocking and the <code>consistent_severe</code> or <code>consistent_mild</code> reveal state. If neither path produces blocking, note specifically which <code>incompatible_patterns</code> adjustment is needed before student use.</p>
+  <p><strong>Dependency:</strong> Step 2.</p>
+
+  <hr>
+
+  <h2>Step 4 · Phase R · Human Task</h2>
+  <div class="step-label">Labor: Human · [EI] Executive Integration</div>
+
+  <h3>Action</h3>
+  <ul>
+    <li><code>/games</code> shows all five started games (Evolution of Trust, Veil of Ignorance, The Cobra Effect, The Rule, Character Drift)</li>
+    <li>Tag filter "virtue ethics" returns only Character Drift</li>
+    <li>Tag filter "ethical play" returns all five</li>
+    <li>Week 6 syllabus check: keywords (<code>virtue ethics</code>, <code>character</code>, <code>decision making</code>, <code>drift</code>, <code>ethical play</code>) match course vocabulary</li>
+  </ul>
+
+  <p><strong>Handoff condition:</strong> Five games visible. Tags correct. Released.</p>
+  <p><strong>Dependency:</strong> Step 3.</p>
+
+  <hr>
+
+  <h2>Score Summary</h2>
+  <table>
+    <thead>
+      <tr><th></th><th>Count</th><th>%</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Total steps</td><td>4</td><td>—</td></tr>
+      <tr><td>Claude tasks</td><td>1</td><td>25%</td></tr>
+      <tr><td>Human tasks</td><td>3</td><td>75%</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <h2>The specific risk for this engine</h2>
+  <p><strong>The dominant pattern threshold.</strong></p>
+  <p>With 10 turns and varied decisions, a player who makes genuinely mixed choices may never establish a dominant pattern. If <code>getDominantPattern()</code> returns null at every drift check, nothing ever blocks, and the <code>mixed_mild</code> or <code>mixed_severe</code> states are all that's reachable.</p>
+  <p>This is not necessarily a failure — the mixed states have their own reveal text. But the glimmer the spec describes — "Turn 10. The player wants to make a decision that contradicts their pattern. They can't" — only happens if blocking fires at Turn 10.</p>
+  <p><strong>If Step 3 reveals the blocking is too rare:</strong> the fix is to add a third incompatible pair to <code>incompatible_patterns</code>, or to reduce the number of distinct card types across decisions so dominant patterns form faster. Both are <code>game.json</code> edits, not engine changes.</p>
+  <p><strong>If blocking fires too easily on all paths:</strong> reduce distinct option cards per turn so the player has fewer ways to stay varied. Again, <code>game.json</code>, not engine.</p>
+  <p>This calibration is the one thing that cannot be checked without playing the game. Step 3 is where it happens.</p>
+
+  <footer>
+    Built with <a href="https://www.bearbrown.co">bearbrown.co</a> · AI tools for educators, creators &amp; founders
+  </footer>
+
+</div>
+</body>
+</html>

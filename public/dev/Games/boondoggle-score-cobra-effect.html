@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boondoggle Score — The Cobra Effect</title>
+  <meta name="description" content="Project score for deploying The Cobra Effect, a consequentialism ethical play game, to the Zebonastic site. Step-by-step task breakdown for Claude Code and human review across Foundation and Release phases.">
+  <meta name="keywords" content="boondoggle score, cobra effect, ethical play, consequentialism, goodharts law, deployment, zebonastic, glimmer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bb-1: #1a0a00;
+      --bb-2: #8B3A0F;
+      --bb-3: #C0392B;
+      --bb-4: #E8A020;
+      --bb-5: #D4500A;
+      --bb-6: #B8860B;
+      --bb-7: #C8A96E;
+      --bb-8: #F0E6D0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bb-8);
+      color: var(--bb-1);
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 48px 24px;
+    }
+    .container { max-width: 760px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; color: var(--bb-2); margin-bottom: 4px; }
+    h2 { font-size: 1.15rem; color: var(--bb-2); margin: 40px 0 12px; border-bottom: 1px solid var(--bb-7); padding-bottom: 6px; }
+    h3 { font-size: 1rem; color: var(--bb-5); margin: 28px 0 8px; }
+    p { margin: 12px 0; }
+    strong { color: var(--bb-1); font-weight: 600; }
+    em { font-style: italic; }
+    ul, ol { padding-left: 1.5em; margin: 10px 0; }
+    li { margin: 4px 0; }
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85em;
+      background: rgba(200,169,110,0.25);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--bb-2);
+    }
+    pre {
+      background: rgba(200,169,110,0.2);
+      border: 1px solid var(--bb-7);
+      border-radius: 4px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.82em;
+      color: var(--bb-1);
+      white-space: pre;
+    }
+    blockquote {
+      border-left: 3px solid var(--bb-4);
+      padding: 8px 16px;
+      margin: 16px 0;
+      background: rgba(232,160,32,0.08);
+      color: var(--bb-1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9em;
+    }
+    th {
+      text-align: left;
+      border-bottom: 2px solid var(--bb-7);
+      padding: 8px 12px;
+      color: var(--bb-2);
+      font-weight: 600;
+    }
+    td {
+      border-bottom: 1px solid var(--bb-7);
+      padding: 8px 12px;
+    }
+    .meta {
+      font-size: 0.82em;
+      color: var(--bb-6);
+      font-family: 'Courier New', monospace;
+      margin-bottom: 32px;
+      line-height: 2;
+    }
+    .step {
+      margin: 32px 0;
+      padding: 24px;
+      border: 1px solid var(--bb-7);
+      border-radius: 4px;
+      background: rgba(240,230,208,0.5);
+    }
+    .step-header {
+      font-family: 'Courier New', monospace;
+      font-size: 0.78em;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--bb-5);
+      margin-bottom: 12px;
+    }
+    footer {
+      margin-top: 64px;
+      padding-top: 20px;
+      border-top: 1px solid var(--bb-7);
+      font-size: 0.8em;
+      color: var(--bb-6);
+      text-align: center;
+    }
+    footer a { color: var(--bb-6); }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>BOONDOGGLE SCORE</h1>
+  <div class="meta">
+    <strong>System:</strong> The Cobra Effect — Consequentialism template for Ethical Play<br>
+    <strong>SDD Completion:</strong> Engine built and validated. Generator validated. Two hidden feedbacks implemented. Canvas package needed for PNGs.<br>
+    <strong>Score generated:</strong> 2026-04-01<br>
+    <strong>Team Claude fluency:</strong> Level III — Claude Code<br>
+    <strong>Deployment target:</strong> Vercel (Zebonastic) → <code>public/games/cobra-effect/</code>
+  </div>
+
+  <blockquote>
+    <strong>Context:</strong> The deploy pipeline is now proven. Evolution of Trust and Veil of Ignorance are live. This score is tighter than previous ones — the infrastructure works, the pattern is known, the risks are specific to this engine.
+  </blockquote>
+
+  <div class="step">
+    <div class="step-header">Step 1 · Phase F · Claude Task</div>
+    <p><strong>LABOR:</strong> Claude Code<br>
+    <strong>CONTEXT REQUIRED:</strong> <code>glimmer-consequentialism/generate.js</code>, <code>glimmer-consequentialism/index.html</code>, <code>glimmer-consequentialism/example-game.json</code>, Zebonastic project root</p>
+
+    <h3>PROMPT:</h3>
+    <pre><code>Deploy the Cobra Effect game to the Zebonastic site.
+
+1. Install the canvas package if not already present:
+   npm list canvas || npm install canvas
+
+2. Copy the three game files into the Zebonastic project:
+   - glimmer-consequentialism/index.html → keep as source engine
+   - glimmer-consequentialism/generate.js → the generator
+   - glimmer-consequentialism/example-game.json → use as game.json
+
+3. Run the generator with --validate first:
+   node glimmer-consequentialism/generate.js \
+     glimmer-consequentialism \
+     glimmer-consequentialism/index.html \
+     --validate
+
+4. If validation passes, deploy:
+   node glimmer-consequentialism/generate.js \
+     glimmer-consequentialism \
+     glimmer-consequentialism/index.html \
+     --nextjs .
+
+5. Verify output:
+   ls -la public/games/cobra-effect/
+   ls -la public/games/cobra-effect/assets/
+
+   Expected:
+   - index.html (with title "The Cobra Effect", description, keywords meta tags)
+   - user-config.js (GAME_CONFIG from game.json, no _mechanic_argument)
+   - assets/ containing a.png, b.png, c.png, d.png (placeholder PNGs)
+
+6. Confirm user-config.js does NOT contain _mechanic_argument:
+   grep "_mechanic_argument" public/games/cobra-effect/user-config.js
+
+   Expected: only the comment line, not an object key.
+
+7. Commit and push:
+   git add public/games/cobra-effect/
+   git commit -m "feat: add cobra-effect starter template (consequentialism, Goodhart's Law)"
+   git push origin main
+
+Report: validation output, directory listing, grep result, commit hash.</code></pre>
+
+    <p><strong>EXPECTED OUTPUT:</strong> <code>public/games/cobra-effect/</code> with <code>index.html</code>, <code>user-config.js</code>, and 4 placeholder PNGs. Committed to main.</p>
+    <p><strong>HANDOFF CONDITION:</strong> Directory exists. All four PNGs generated. <code>_mechanic_argument</code> appears only in the comment, not as a GAME_CONFIG key. Commit pushed.</p>
+    <p><strong>DEPENDENCY:</strong> None — deploy infrastructure is proven.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-header">Step 2 · Phase F · Human Task</div>
+    <p><strong>LABOR:</strong> Human<br>
+    <strong>SUPERVISORY CAPACITY:</strong> [PA] — Plausibility Auditing: after Vercel deploys (1–2 minutes), verify the card and game load correctly.</p>
+
+    <h3>ACTION:</h3>
+
+    <p><strong>Check 1 — Card on <code>/games</code>:</strong></p>
+    <ul>
+      <li>Card labeled "The Cobra Effect" appears</li>
+      <li>Description reads correctly (no <code>&amp;amp;</code> — entity fix should be live)</li>
+      <li>Tags include "consequentialism" and "ethical play"</li>
+    </ul>
+
+    <p><strong>Check 2 — Game loads at <code>/games/cobra-effect</code>:</strong></p>
+    <ul>
+      <li>Intro screen shows: role, context, board note ("Board metric: Satisfaction Score — target 55"), four node descriptions in order A→B→C→D</li>
+    </ul>
+
+    <p><strong>Check 3 — One full play-through:</strong></p>
+    <ul>
+      <li>Allocate all 5 tokens to D (Satisfaction Score) every turn for all 12 quarters</li>
+      <li>Confirm: next-turn button is disabled until all 5 tokens are placed</li>
+      <li>Confirm: Satisfaction Score rises quickly, Staff Morale declines visibly</li>
+      <li>Confirm: around turn 9–10, Staff Morale bar turns orange/red, Patient Throughput drops sharply</li>
+      <li>Confirm: reveal appears with four sections; "What this game argues" reads: <em>"When a measure becomes a target, it ceases to be a good measure of the thing it was designed to track."</em></li>
+      <li>Confirm: closing question reads: <em>"What was the Satisfaction Score actually measuring?"</em></li>
+    </ul>
+
+    <p><strong>FAIL TRIAGE:</strong></p>
+    <ul>
+      <li>Card missing → <code>index.html</code> missing <code>&lt;title&gt;</code> tag. Check the generated file.</li>
+      <li>Game blank → check browser console. Likely <code>user-config.js</code> 404. Check assets path.</li>
+      <li>Next-turn button never enables → <code>tokensLeft !== 0</code> check. Try placing all 5 tokens before checking.</li>
+      <li>Staff Morale doesn't collapse → hidden feedback thresholds not triggering. Check that <code>GAME_CONFIG</code> in the loaded page does NOT contain <code>hidden_feedback</code> override (should be engine-default).</li>
+      <li>Reveal shows wrong state → open console after reveal, type <code>state</code> to see final values and which state key was selected.</li>
+    </ul>
+
+    <p><strong>HANDOFF CONDITION:</strong> Card visible with correct tags. Game loads. Pure-D strategy produces <code>high_metric_depleted</code> reveal state. Mechanic argument is engine text.</p>
+    <p><strong>DEPENDENCY:</strong> Step 1.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-header">Step 3 · Phase H · Human Task</div>
+    <p><strong>LABOR:</strong> Human<br>
+    <strong>SUPERVISORY CAPACITY:</strong> [IJ] — Interpretive Judgment: does the mechanic produce the glimmer, or does it feel like a resource management puzzle with a surprise ending?</p>
+
+    <h3>ACTION:</h3>
+    <p>Play the game three ways and assess:</p>
+
+    <p><strong>Run 1 — Pure D optimization</strong> (all 5 tokens in Satisfaction Score every turn):<br>
+    Does the collapse feel discovered or telegraphed? The bar color change on Staff Morale is intentional — a visual signal without an explanation. Does the player feel implicated when Patient Throughput crashes, or does it feel like the game "punished" them?</p>
+
+    <p><strong>Run 2 — Balanced</strong> (distribute tokens across all four nodes):<br>
+    Does this produce <code>high_metric_intact</code>? Does the reveal text for that state feel honest — "you found a balance most administrators do not find" — or does it feel like a prize?</p>
+
+    <p><strong>Run 3 — Protect A heavily</strong> (3–4 tokens in Staff Morale every turn):<br>
+    Does this produce <code>low_metric_intact</code>? Does the reveal — "you protected the system at the cost of the metric. Whether that was the right trade is not for this screen to say." — actually feel like it's not saying?</p>
+
+    <p>The test: after reading the reveal, does the player feel like they received a mirror or a verdict? If it feels like a verdict, the state text needs revision.</p>
+
+    <p><strong>HANDOFF CONDITION:</strong> At least two of the three reveal states produce the glimmer. If any state text reads as a verdict, note the specific text that needs revision before student use.</p>
+    <p><strong>DEPENDENCY:</strong> Step 2.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-header">Step 4 · Phase R · Human Task</div>
+    <p><strong>LABOR:</strong> Human<br>
+    <strong>SUPERVISORY CAPACITY:</strong> [EI] — Executive Integration: confirm coherence across the full games system.</p>
+
+    <h3>ACTION:</h3>
+    <ol>
+      <li><code>/games</code> — Evolution of Trust, Veil of Ignorance, and The Cobra Effect all appear. Tag filter "ethical play" returns all three. Tag filter "consequentialism" returns only Cobra Effect.</li>
+      <li><code>/games/cobra-effect</code> — game plays correctly on fresh browser (cleared cache).</li>
+      <li>Both placeholder PNGs (node A–D) are visible in the assignment phase as neutral gray squares with node key labels.</li>
+      <li><strong>Course taxonomy check:</strong> Week 2 of the Ethical Play syllabus covers "Consequentialism as Mechanic — the VE causal chain display." The keywords in the deployed game (<code>consequentialism</code>, <code>goodharts law</code>, <code>metrics</code>, <code>measurement</code>, <code>ethical play</code>) match what a student in Week 2 would search for.</li>
+    </ol>
+
+    <p><strong>HANDOFF CONDITION:</strong> All three games visible and tagged correctly. Cobra Effect keywords match Week 2 course vocabulary. Released.</p>
+    <p><strong>DEPENDENCY:</strong> Step 3.</p>
+  </div>
+
+  <h2>Score Summary</h2>
+  <table>
+    <thead>
+      <tr><th></th><th>Count</th><th>%</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Total steps</td><td>4</td><td>—</td></tr>
+      <tr><td>Claude tasks</td><td>1</td><td>25%</td></tr>
+      <tr><td>Human tasks</td><td>3</td><td>75%</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>The score is this short because the pattern is proven.</strong> The generator is validated, the pipeline works, the risks are known. Step 1 is mechanical. Steps 2–4 are irreducibly human: browser verification, ethical judgment, and integration check.</p>
+
+  <h2>Critical Path</h2>
+  <p><strong>Step 1 → 2 → 3 → 4</strong></p>
+  <p>Linear. Step 3 is the only gate that could send work backward — if the reveal text reads as a verdict, the state strings in <code>game.json</code> need revision before the game is used in course. That revision is 5 minutes of editing; catching it at Step 3 instead of after student use is the value.</p>
+
+  <h2>The One Thing That Will Fail and How to Fix It</h2>
+  <p><strong>Canvas package on the Zebonastic deploy machine.</strong></p>
+  <p>If <code>npm install canvas</code> fails (native dependency compilation issues are common), the placeholder PNGs won't generate. The game will still work — placeholder text appears inline. But the assignment phase will show text labels instead of image boxes.</p>
+  <p>Fix: generate the PNGs locally first, commit them to the repo alongside the game files, and add <code>"placeholder": false</code> to each node in <code>game.json</code> to tell the generator to skip generation. The PNGs travel with the game.</p>
+
+</div>
+
+<footer>
+  Built with <a href="https://www.bearbrown.co">bearbrown.co</a> · AI tools for educators, creators &amp; founders
+</footer>
+</body>
+</html>
