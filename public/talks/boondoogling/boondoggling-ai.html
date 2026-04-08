@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You Are Gru: Stop Vibe Coding. Start Conducting.</title>
+<meta name="description" content="Given any software project, learners can paste the Gru prompt into Claude, run /help, and complete the /v1 intake to produce a confirmed Problem Summary.">
+<meta name="keywords" content="boondoggling, vibe coding, conducting AI, Gru, problem formulation, supervisory capacities, irreducibly human, Claude Code">
+<meta name="author" content="Nik Bear Brown — Irreducibly Human">
+<meta name="category" content="AI Tools &amp; Software Development">
+<meta name="slide-count" content="15">
+<meta name="audio" content="true">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:hsl(43,23%,93%);
+  --fg:hsl(0,0%,4%);
+  --accent:#ea580c;
+  --muted:hsl(0,0%,40%);
+  --muted-bg:hsl(40,10%,85%);
+  --card-bg:hsl(43,20%,97%);
+  --font:'JetBrains Mono',monospace;
+}
+[data-theme="dark"]{
+  --bg:hsl(0,0%,6%);
+  --fg:hsl(43,23%,93%);
+  --muted:hsl(0,0%,58%);
+  --muted-bg:hsl(0,0%,11%);
+  --card-bg:hsl(0,0%,9%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--fg);transition:background .25s,color .25s}
+
+/* DOT GRID */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle,var(--fg) 1px,transparent 1px);
+  background-size:24px 24px;opacity:.04;
+}
+
+/* DECK */
+.deck{position:relative;width:100%;height:100vh;overflow:hidden;z-index:1}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:36px 48px 28px;gap:14px}
+.slide.active{display:flex}
+
+/* SLIDE META */
+.smeta{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.sdiv{flex:1;height:1px;background:var(--fg);opacity:.12}
+
+/* LABELS */
+.lbl{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.lbl-o,.oc{color:var(--accent)}
+.mu{color:var(--muted)}
+.bo{font-weight:800}
+
+/* BLINK DOT */
+.dot8{width:8px;height:8px;background:var(--accent);flex-shrink:0}
+.dot8.ab{animation:blink 1.4s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* SLIDE TITLE */
+.stitle{font-size:clamp(14px,2.2vw,28px);font-weight:800;text-transform:uppercase;line-height:1.18;letter-spacing:.025em;max-width:960px;flex-shrink:0}
+.stitle .o{color:var(--accent)}
+
+/* GLITCH */
+.ag{animation:glitch 5s infinite}
+@keyframes glitch{
+  0%,88%,100%{transform:translate(0)}
+  89%{transform:translate(-3px,1px)}
+  90%{transform:translate(3px,-1px)}
+  91%{transform:translate(-1px,2px)}
+  92%{transform:translate(2px,-2px)}
+  93%{transform:translate(0)}
+}
+
+/* CONTENT BOX */
+.cb{border:2px solid var(--fg);background:var(--card-bg);padding:22px 24px;flex:1;display:flex;flex-direction:column;gap:14px;overflow:auto;min-height:0}
+
+/* TEXT SIZES */
+.txs{font-size:10px;color:var(--muted);line-height:1.5}
+.tsm{font-size:12px;color:var(--muted);line-height:1.7}
+.txl{font-size:clamp(32px,5.5vw,76px);font-weight:800;line-height:1.05}
+.t2xl{font-size:clamp(48px,9vw,128px);font-weight:800;line-height:1}
+
+/* BRUTALIST TABLE */
+.bt{width:100%;border-collapse:collapse;font-size:11px}
+.bt thead tr{background:var(--fg);color:var(--bg)}
+.bt thead th{padding:9px 13px;text-align:left;font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:9px}
+.bt tbody tr:nth-child(even){background:var(--muted-bg)}
+.bt tbody td{padding:9px 13px;border-bottom:1px solid var(--fg);border-left:1px solid var(--fg);line-height:1.5}
+.bt tbody td:first-child{border-left:none}
+.bt tbody tr:last-child td{border-bottom:none}
+.bt .warn{color:var(--accent);font-weight:800}
+.bt .good{color:#16a34a;font-weight:800}
+.bt .hl{background:rgba(234,88,12,.08)}
+
+/* TWO COLUMN */
+.twoc{display:grid;grid-template-columns:1fr 1fr;gap:0;flex:1;min-height:0}
+.col{padding:18px;display:flex;flex-direction:column;gap:8px}
+.col:first-child{border-right:2px solid var(--fg)}
+.clbl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;margin-bottom:6px}
+
+/* STAT PAIR */
+.spair{display:flex;gap:0;flex:1;min-height:0}
+.sb{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px;border-right:2px solid var(--fg)}
+.sb:last-child{border-right:none}
+.sl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.sv{font-size:clamp(48px,7vw,112px);font-weight:800;line-height:1}
+
+/* NUMBERED BLOCKS */
+.nbs{display:flex;flex-direction:column;gap:0;flex:1;min-height:0}
+.nb{display:grid;grid-template-columns:40px 1fr;gap:0;border-bottom:1px solid var(--fg);padding:11px 0}
+.nb:last-child{border-bottom:none}
+.nbnum{font-size:20px;font-weight:800;color:var(--accent);line-height:1.2}
+.nbb strong{font-size:11px;font-weight:800;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.nbb p{font-size:11px;color:var(--muted);line-height:1.65}
+
+/* TIMELINE */
+.tl{display:flex;flex-direction:column;flex:1;min-height:0}
+.tli{display:grid;grid-template-columns:110px 1fr;border-top:1px solid var(--fg);padding:13px 0}
+.tli:first-child{border-top:none}
+.tld{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:800;padding-right:14px;line-height:1.5;padding-top:2px}
+.tlb strong{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:3px}
+.tlb p{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* QUOTE */
+.qt{border-left:4px solid var(--accent);padding:18px 22px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px;min-height:0}
+.qt .qtext{font-size:clamp(13px,1.6vw,18px);font-weight:600;line-height:1.6}
+.qt .qsub{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+
+/* PROBLEM/COMMIT */
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:0;flex:1;min-height:0}
+.pcc{padding:18px;display:flex;flex-direction:column;gap:6px}
+.pcc:first-child{border-right:2px solid var(--fg)}
+.pclbl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;margin-bottom:6px}
+.pci{font-size:11px;color:var(--muted);line-height:1.65;padding-left:0;position:relative}
+.pci::before{content:'// ';color:var(--accent);font-weight:800}
+
+/* CALLOUT */
+.ca{border:1px solid var(--accent);padding:12px 16px;color:var(--accent);font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;line-height:1.6;flex-shrink:0}
+
+/* LIST */
+.ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.ul li{font-size:11px;color:var(--muted);line-height:1.6}
+.ul li::before{content:'› ';color:var(--accent);font-weight:800}
+
+/* HR */
+hr.b{border:none;border-top:2px solid var(--fg);margin:4px 0;flex-shrink:0;opacity:.2}
+
+/* FOOTER */
+.sfoot{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding-top:8px}
+
+/* DARK SLIDE */
+.sdark{background:hsl(0,0%,4%)}
+
+/* PROGRESS */
+#progress{position:fixed;bottom:0;left:0;height:2px;background:var(--accent);transition:width .3s;z-index:1000}
+
+/* DOTS */
+#dots{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:200}
+.d{width:5px;height:5px;background:var(--fg);opacity:.2;cursor:pointer;transition:opacity .2s,background .2s}
+.d.on{background:var(--accent);opacity:1}
+
+/* CONTROLS */
+#ctrl{position:fixed;top:18px;right:18px;display:flex;gap:8px;z-index:300}
+.cbtn{background:none;border:1px solid var(--fg);color:var(--fg);font-family:var(--font);font-size:11px;padding:5px 9px;cursor:pointer;letter-spacing:.1em;opacity:.55;transition:opacity .2s;line-height:1}
+.cbtn:hover{opacity:1}
+
+/* SOUND PULSE */
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(234,88,12,.7)}70%{box-shadow:0 0 0 10px rgba(234,88,12,0)}}
+.pulse{animation:pulse 1.6s ease-out infinite;border-color:var(--accent) !important;color:var(--accent) !important;opacity:1 !important}
+
+/* AUDIO TOOLTIP */
+#atip{position:fixed;top:52px;right:18px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);opacity:0;transition:opacity .4s;pointer-events:none;z-index:300}
+
+/* COUNTDOWN */
+#cd{position:fixed;bottom:2px;left:0;height:3px;background:var(--accent);opacity:.45;width:0;z-index:999}
+
+/* SLIDE-IN ANIM */
+@keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .cb{animation:slideIn .22s ease-out}
+.slide.active .stitle{animation:slideIn .18s ease-out}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ─────────────────────────────────────────────────────── SLIDE 01 — HOOK -->
+<div class="slide active" data-section="HOOK">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 01 — HOOK</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Your AI is confident. <span class="o">Your system is breaking.</span></div>
+  <div class="cb" style="justify-content:space-between">
+    <div class="txl" style="line-height:1.25">You described<br>what you wanted.<br>The AI wrote it.<br><span class="oc">You shipped it.</span></div>
+    <hr class="b">
+    <ul class="ul">
+      <li>Something's wrong — and you don't know where to look.</li>
+      <li>The problem isn't the AI. The problem is the missing <span class="oc bo">80%.</span></li>
+      <li>Vibe coding optimizes for the visible layer. It ignores the rest.</li>
+    </ul>
+    <hr class="b">
+    <p class="tsm" style="color:var(--fg);font-weight:600;letter-spacing:.04em">BOONDOGGLING.AI &nbsp;·&nbsp; NIK BEAR BROWN &nbsp;·&nbsp; IRREDUCIBLY HUMAN</p>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────── SLIDE 02 — LEARNING OUTCOMES -->
+<div class="slide" data-section="LEARNING OUTCOMES">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 02 — LEARNING OUTCOMES</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">What you will be able to <span class="o">do.</span></div>
+  <div class="cb">
+    <table class="bt">
+      <thead>
+        <tr><th>By the end of this, you will be able to…</th><th>Bloom's</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Distinguish vibe coding from conducting</td><td class="mu">Analyze</td></tr>
+        <tr><td>Identify the five supervisory capacities</td><td class="mu">Analyze</td></tr>
+        <tr><td>Paste the Gru prompt and run <span class="oc">/help</span></td><td class="mu">Apply</td></tr>
+        <tr class="hl"><td>Complete <span class="oc">/v1</span> and produce a confirmed Problem Summary</td><td class="good">Create</td></tr>
+      </tbody>
+    </table>
+    <p class="tsm">Each outcome is a behavior you can check — not a feeling you might have. The last row is the deliverable. <span class="oc bo">Everything else is the path.</span></p>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────── SLIDE 03 — THE 20% TRAP -->
+<div class="slide" data-section="THE 20% TRAP">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 03 — THE 20% TRAP</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Writing code is <span class="o">20% of the job.</span></div>
+  <div class="cb" style="padding:0">
+    <div class="spair" style="flex:1">
+      <div class="sb">
+        <div class="sv" style="color:var(--accent)">20%</div>
+        <div class="sl">The part you see</div>
+        <p class="tsm" style="margin-top:10px">Keystrokes. Prompts. Output. The visible layer. The part most tools — and most vibe coders — optimize for.</p>
+      </div>
+      <div class="sb">
+        <div class="sv" style="color:var(--fg)">80%</div>
+        <div class="sl">The part nobody talks about</div>
+        <p class="tsm" style="margin-top:10px">Decisions. Sequencing. Verification. Failure modes. This is invisible — until it breaks everything.</p>
+      </div>
+    </div>
+    <p class="tsm" style="padding:14px 24px;border-top:2px solid var(--fg)">The AI executes exactly what it understood you to mean. <span class="oc bo">That gap — between what you meant and what it understood — is where all the damage lives.</span></p>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────── SLIDE 04 — THE OTHER 80% -->
+<div class="slide" data-section="THE OTHER 80%">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 04 — THE OTHER 80%</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">The other 80% is <span class="o">decisions.</span></div>
+  <div class="cb">
+    <div class="nbs">
+      <div class="nb">
+        <div class="nbnum">1</div>
+        <div class="nbb">
+          <strong>What variables matter here?</strong>
+          <p>Not all inputs are equal. Deciding which ones govern the output is human work. Claude doesn't know which ones you care about.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum">2</div>
+        <div class="nbb">
+          <strong>What are the failure modes?</strong>
+          <p>Claude will not tell you what it doesn't know it doesn't know. Surfacing failure modes requires domain grounding the prompt doesn't have.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum">3</div>
+        <div class="nbb">
+          <strong>What must a human verify before the next step runs?</strong>
+          <p>Handoff conditions. Without them, each step inherits every unverified assumption from the last.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum">4</div>
+        <div class="nbb">
+          <strong>What order do things need to happen in?</strong>
+          <p>Dependency sequencing. The AI doesn't know what breaks if you skip step 3. You do — if you've thought it through.</p>
+        </div>
+      </div>
+    </div>
+    <p class="tsm" style="border-top:1px solid var(--fg);padding-top:10px"><span class="oc bo">That's not prompting. That's thinking.</span> And it's the part nobody talks about because it's invisible.</p>
+  </div>
+</div>
+
+<!-- ─────────────────────────────── SLIDE 05 — VIBE CODING vs CONDUCTING -->
+<div class="slide" data-section="VIBE CODING vs CONDUCTING">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 05 — VIBE CODING vs CONDUCTING</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Two mental models. <span class="o">One works.</span></div>
+  <div class="cb" style="padding:0">
+    <div class="pc">
+      <div class="pcc">
+        <div class="pclbl" style="color:var(--muted)">Vibe Coding</div>
+        <p class="pci">Describe what you want</p>
+        <p class="pci">AI writes the code</p>
+        <p class="pci">You check it</p>
+        <p class="pci">You ship it</p>
+        <p class="pci">Something breaks</p>
+        <p class="pci">Prompt harder</p>
+        <p class="pci" style="margin-top:auto;color:var(--accent)">Repeat until frustrated</p>
+      </div>
+      <div class="pcc">
+        <div class="pclbl" style="color:var(--accent)">Conducting</div>
+        <p class="pci">Decide what the mission is</p>
+        <p class="pci">Sequence tasks by dependency</p>
+        <p class="pci">Assign each task to the right labor</p>
+        <p class="pci">Set explicit handoff conditions</p>
+        <p class="pci">Verify before the next step runs</p>
+        <p class="pci">Integrate across threads</p>
+        <p class="pci" style="margin-top:auto;color:#16a34a;font-weight:800">Ship something that holds</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────── SLIDE 06 — MEET GRU -->
+<div class="slide" data-section="MEET GRU">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 06 — MEET GRU</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Gru doesn't build the rocket. <span class="o">Gru designs the mission.</span></div>
+  <div class="cb">
+    <div class="qt">
+      <div class="qtext">"The minions are excellent. They will execute exactly what they understood you to mean. That gap — between what you meant and what they understood — is where <span class="oc">all the damage lives.</span>"</div>
+      <div class="qsub">— Gru system identity · Humanitarians AI · boondoggling.ai</div>
+    </div>
+    <hr class="b">
+    <div class="nbs" style="gap:0">
+      <div class="nb">
+        <div class="nbnum" style="font-size:14px;padding-top:3px">→</div>
+        <div class="nbb">
+          <strong>A senior software architect in a Claude conversation</strong>
+          <p>20+ years shipping systems. Has been in the incident review when a missing decision caused a production outage.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum" style="font-size:14px;padding-top:3px">→</div>
+        <div class="nbb">
+          <strong>You are Gru. Claude is the minions.</strong>
+          <p>Your job: design the mission, assign the minions, check their work, decide what the mission IS, and take responsibility for the outcome.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────── SLIDE 07 — BOONDOGGLING -->
+<div class="slide" data-section="BOONDOGGLING">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 07 — BOONDOGGLING</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">This practice has a name. <span class="o">It's called boondoggling.</span></div>
+  <div class="cb">
+    <div class="ca">BOONDOGGLING: Programming as conducting — assigning each task to the right labor, sequencing by dependency, with explicit handoff conditions between every step.</div>
+    <div class="nbs">
+      <div class="nb">
+        <div class="nbnum">1</div>
+        <div class="nbb">
+          <strong>Define the separation</strong>
+          <p>Claude tasks: exact prompts, expected output, handoff conditions. Human tasks: named supervisory capacities — not "review it."</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum">2</div>
+        <div class="nbb">
+          <strong>Separate by labor type</strong>
+          <p>Claude does what it's superhuman at. You do what is irreducibly human. The Boondoggle Report makes that distinction impossible to miss.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum">3</div>
+        <div class="nbb">
+          <strong>Sequence by dependency</strong>
+          <p>No step N+1 runs until step N's handoff condition is met. Not what felt right. Not what seemed done. What is actually verified.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────── SLIDE 08 — PAUSE & REFLECT (1) -->
+<div class="slide" data-section="PAUSE &amp; REFLECT">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 08 — CHECK FOR UNDERSTANDING</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Before the how-to. <span class="o">Pause.</span></div>
+  <div class="cb" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px">
+    <div class="txl">PAUSE.</div>
+    <p class="tsm" style="max-width:540px;font-size:13px">What's one decision you made on your last AI project that you couldn't have delegated to Claude — even if you wanted to? Name it specifically.</p>
+    <div class="lbl oc">// CHECK FOR UNDERSTANDING</div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────── SLIDE 09 — STEP 1: PASTE THE PROMPT -->
+<div class="slide" data-section="STEP 1: PASTE">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 09 — STEP 1</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Step one is <span class="o">copy and paste.</span></div>
+  <div class="cb">
+    <div class="nbs">
+      <div class="nb">
+        <div class="nbnum">1</div>
+        <div class="nbb">
+          <strong>Copy the Gru prompt</strong>
+          <p>Available at <span class="oc">boondoggling.ai</span> · irreducibly.xyz · GitHub. The full system prompt — not a summary, not a shortened version. The whole thing.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum">2</div>
+        <div class="nbb">
+          <strong>Open a Claude conversation</strong>
+          <p>Claude.ai, any tier. Claude Code works too. Better: create a Project in Claude and paste Gru as the system prompt — persistent across sessions, no re-pasting.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum">3</div>
+        <div class="nbb">
+          <strong>Paste it as your first message</strong>
+          <p>Gru responds with the full welcome menu automatically. No configuration. No API key. No setup script. The prompt is the tool.</p>
+        </div>
+      </div>
+    </div>
+    <p class="tsm" style="border-top:1px solid var(--fg);padding-top:10px">The interface is the channel. <span class="oc bo">The prompt is the tool.</span> These are not the same thing.</p>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────── SLIDE 10 — STEP 2: /help -->
+<div class="slide" data-section="STEP 2: /help">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 10 — STEP 2</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Type <span class="o">/help.</span> See everything Gru can do.</div>
+  <div class="cb">
+    <table class="bt">
+      <thead>
+        <tr><th>Command</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr class="hl"><td class="oc bo">/v1 &nbsp;/intake</td><td>Problem intake — start here, always</td></tr>
+        <tr><td>/v2 → /v4</td><td>Architecture principles, user flows, needs</td></tr>
+        <tr><td>/s1 → /s4</td><td>Components, integrations, data, edge cases</td></tr>
+        <tr><td>/g1 &nbsp;/fulldoc</td><td>Compile the full SDD draft</td></tr>
+        <tr class="hl"><td class="oc bo">/claude &nbsp;/boondoggle</td><td class="good">Generate the Boondoggle Score — Claude tasks + human tasks, sequenced by dependency</td></tr>
+      </tbody>
+    </table>
+    <p class="tsm">Two modes. Default: interactive — Gru asks before building, pushes back on weak input, holds phase gates. Append <span class="oc">/silent</span> for immediate output, no friction.</p>
+    <p class="tsm"><span class="oc bo">For your first session: stay interactive. The pushback is the value.</span></p>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────── SLIDE 11 — STEP 3: /v1 INTAKE -->
+<div class="slide" data-section="STEP 3: /v1 INTAKE">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 11 — STEP 3</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle"><span class="o">/v1</span> is the interrogation before the build.</div>
+  <div class="cb">
+    <div class="tl">
+      <div class="tli">
+        <div class="tld">Question 1</div>
+        <div class="tlb">
+          <strong>What problem does this system solve?</strong>
+          <p>"In one sentence — not a paragraph." Gru rejects anything that could describe ten different systems.</p>
+        </div>
+      </div>
+      <div class="tli">
+        <div class="tld">Questions 2–4</div>
+        <div class="tlb">
+          <strong>Who has this problem?</strong>
+          <p>One specific user. Their current workflow. What breaks for them today. Not a persona — a person.</p>
+        </div>
+      </div>
+      <div class="tli">
+        <div class="tld">Questions 5–8</div>
+        <div class="tlb">
+          <strong>Category, deployment, scale, comparables</strong>
+          <p>The constraints that govern every architecture decision downstream. Gru will not skip them even if you try.</p>
+        </div>
+      </div>
+      <div class="tli">
+        <div class="tld">Output</div>
+        <div class="tlb">
+          <strong>The Problem Summary</strong>
+          <p>A locked format. One paragraph. The single biggest unresolved question named. Gru waits for your confirmation before /v2.</p>
+        </div>
+      </div>
+    </div>
+    <p class="tsm" style="border-top:1px solid var(--fg);padding-top:10px">Gru asks one question at a time. The friction is <span class="oc bo">intentional.</span> Pasting a wall of context is vibe coding.</p>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── SLIDE 12 — THE PROBLEM SUMMARY -->
+<div class="slide" data-section="THE PROBLEM SUMMARY">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 12 — THE DELIVERABLE</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">This is what a confirmed brief <span class="o">looks like.</span></div>
+  <div class="cb">
+    <div class="qt">
+      <div class="qtext" style="font-size:clamp(11px,1.4vw,15px);line-height:1.75">
+        "This system is <span class="oc">[WHAT]</span> for <span class="oc">[WHO]</span>, that solves <span class="oc">[CORE PROBLEM]</span> through <span class="oc">[PRIMARY MECHANISM]</span>. It occupies the space between <span class="mu">[COMPARABLE A]</span> and <span class="mu">[COMPARABLE B]</span>, and it succeeds when the user can <span class="oc">[SUCCESS CONDITION]</span> without <span class="mu">[CURRENT FRICTION]</span>."
+      </div>
+      <div class="qsub">Gru Problem Summary Format · /v1 output · confirmed before /v2 begins</div>
+    </div>
+    <hr class="b">
+    <ul class="ul">
+      <li>After the summary, Gru names the single biggest unresolved question in the problem definition.</li>
+      <li>If any bracket could describe ten different systems, the intake isn't done.</li>
+      <li><span class="oc bo">That's the standard. Gru holds you to it.</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────── SLIDE 13 — PAUSE & REFLECT (2) -->
+<div class="slide" data-section="PAUSE &amp; REFLECT 2">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 13 — CHECK FOR UNDERSTANDING</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Before the capacities. <span class="o">Pause.</span></div>
+  <div class="cb" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px">
+    <div class="txl">PAUSE.</div>
+    <p class="tsm" style="max-width:560px;font-size:13px">Open a real project — or one you abandoned. Can you fill in the Problem Summary template right now? Where does it break down?</p>
+    <div class="lbl oc">// CHECK FOR UNDERSTANDING</div>
+  </div>
+</div>
+
+<!-- ───────────────────────────── SLIDE 14 — FIVE SUPERVISORY CAPACITIES -->
+<div class="slide" data-section="FIVE SUPERVISORY CAPACITIES">
+  <div class="smeta">
+    <span class="lbl">// SLIDE 14 — FIVE SUPERVISORY CAPACITIES</span>
+    <div class="sdiv"></div>
+    <span class="dot8 ab"></span>
+  </div>
+  <div class="stitle">Five things <span class="o">only you can do.</span></div>
+  <div class="cb">
+    <div class="nbs">
+      <div class="nb">
+        <div class="nbnum" style="font-size:11px;font-weight:800;padding-top:3px;letter-spacing:.05em">[PA]</div>
+        <div class="nbb">
+          <strong>Plausibility Auditing</strong>
+          <p>Hearing the wrong note before verification. Sensing domain-grounded implausibility before running a single test.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum" style="font-size:11px;font-weight:800;padding-top:3px;letter-spacing:.05em">[PF]</div>
+        <div class="nbb">
+          <strong>Problem Formulation</strong>
+          <p>Deciding what the mission is before Claude sees it. Not how to prompt — what to hand the minion and why.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum" style="font-size:11px;font-weight:800;padding-top:3px;letter-spacing:.05em">[TO]</div>
+        <div class="nbb">
+          <strong>Tool Orchestration</strong>
+          <p>Choosing which Claude task, in what order, with what trust level, at this specific step in the build.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum" style="font-size:11px;font-weight:800;padding-top:3px;letter-spacing:.05em">[IJ]</div>
+        <div class="nbb">
+          <strong>Interpretive Judgment</strong>
+          <p>Supplying meaning, moral legitimacy, or accountability to Claude's output that Claude cannot supply itself.</p>
+        </div>
+      </div>
+      <div class="nb">
+        <div class="nbnum" style="font-size:11px;font-weight:800;padding-top:3px;letter-spacing:.05em">[EI]</div>
+        <div class="nbb">
+          <strong>Executive Integration</strong>
+          <p>Holding all four simultaneously toward a unified goal. This is what conductors do. This is the whole job.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────────── SLIDE 15 — CLOSE -->
+<div class="slide sdark" data-section="CLOSE" style="background:hsl(0,0%,4%)">
+  <div class="smeta">
+    <span class="lbl" style="color:hsl(0,0%,35%)">// SLIDE 15 — CLOSE</span>
+    <div class="sdiv" style="background:hsl(43,23%,93%);opacity:.1"></div>
+    <span class="dot8 ab" style="background:#16a34a"></span>
+  </div>
+  <div class="stitle ag" style="color:hsl(43,23%,93%)">You are Gru. <span style="color:#ea580c">Start conducting.</span></div>
+  <div class="cb" style="border-color:hsl(43,23%,18%);background:hsl(0,0%,7%);justify-content:space-between">
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <span style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#16a34a;font-weight:800;font-family:var(--font)">// PASTE THE PROMPT</span>
+      <span style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#16a34a;font-weight:800;font-family:var(--font)">// RUN /v1</span>
+      <span style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#16a34a;font-weight:800;font-family:var(--font)">// CONFIRM THE BRIEF</span>
+    </div>
+    <hr style="border:none;border-top:1px solid hsl(43,23%,15%);margin:4px 0">
+    <p style="font-size:14px;color:hsl(0,0%,52%);line-height:1.75;max-width:680px;font-family:var(--font)">The tools are excellent. They will execute exactly what they understood you to mean. Your job is to be precise about what you mean — in the right sequence — and to verify before the next step begins.</p>
+    <p style="font-size:13px;color:hsl(43,23%,75%);font-weight:800;letter-spacing:.04em;font-family:var(--font)">That's not a consolation prize. That's the whole job.</p>
+    <hr style="border:none;border-top:1px solid hsl(43,23%,15%);margin:4px 0">
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <span style="font-size:9px;color:hsl(0,0%,32%);letter-spacing:.1em;font-family:var(--font)">boondoggling.ai</span>
+      <span style="font-size:9px;color:hsl(0,0%,32%);letter-spacing:.1em;font-family:var(--font)">irreducibly.xyz</span>
+      <span style="font-size:9px;color:hsl(0,0%,32%);letter-spacing:.1em;font-family:var(--font)">brutalist.art</span>
+      <span style="font-size:9px;color:hsl(0,0%,32%);letter-spacing:.1em;font-family:var(--font)">bearbrown.co</span>
+      <span style="font-size:9px;color:hsl(0,0%,32%);letter-spacing:.1em;font-family:var(--font)">frictional.xyz</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- CONTROLS -->
+<div id="ctrl">
+  <button class="cbtn pulse" id="sndBtn" title="Toggle audio (M)">🔇</button>
+  <button class="cbtn" id="thmBtn" title="Toggle theme">◐</button>
+</div>
+<div id="atip">▶ tap for audio</div>
+<div id="progress"></div>
+<div id="dots"></div>
+<div id="cd"></div>
+
+<script>
+const DECK = 'boondoggling-ai';
+const slides = Array.from(document.querySelectorAll('.slide'));
+const N = slides.length;
+let cur = 0, soundOn = false, aud = null, cdTimer = null, heard = false;
+
+// BUILD DOTS
+const dotsEl = document.getElementById('dots');
+slides.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'd' + (i===0?' on':'');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function syncUI(){
+  dotsEl.querySelectorAll('.d').forEach((d,i) => d.className='d'+(i===cur?' on':''));
+  document.getElementById('progress').style.width = ((cur+1)/N*100)+'%';
+}
+
+function goTo(n){
+  if(n<0||n>=N) return;
+  slides[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  syncUI();
+  cancelCD();
+  if(soundOn) playSlide();
+}
+
+const next = () => goTo(cur < N-1 ? cur+1 : cur);
+const prev = () => goTo(cur > 0 ? cur-1 : cur);
+
+// AUDIO
+function src(){ return './'+DECK+'/slide-'+String(cur+1).padStart(2,'0')+'.mp3'; }
+function playSlide(){
+  if(aud){ aud.pause(); aud=null; }
+  cancelCD();
+  const a = new Audio(src());
+  aud = a;
+  a.onended = startCD;
+  a.onerror = () => {};
+  a.play().catch(()=>{});
+}
+
+function startCD(){
+  const el = document.getElementById('cd');
+  el.style.transition='none'; el.style.width='0';
+  requestAnimationFrame(()=>{
+    el.style.transition='width 3s linear'; el.style.width='100%';
+  });
+  cdTimer = setTimeout(()=>{ el.style.transition='none'; el.style.width='0'; next(); }, 3000);
+}
+
+function cancelCD(){
+  if(cdTimer){ clearTimeout(cdTimer); cdTimer=null; }
+  const el = document.getElementById('cd');
+  el.style.transition='none'; el.style.width='0';
+}
+
+// SOUND
+const sndBtn = document.getElementById('sndBtn');
+const atip = document.getElementById('atip');
+function toggleSound(){
+  soundOn = !soundOn;
+  sndBtn.textContent = soundOn ? '🔊' : '🔇';
+  if(!heard){ heard=true; sndBtn.classList.remove('pulse'); atip.style.opacity='0'; }
+  if(soundOn){ playSlide(); } else { if(aud){aud.pause();aud=null;} cancelCD(); }
+}
+sndBtn.onclick = toggleSound;
+setTimeout(()=>{ if(!heard) atip.style.opacity='1'; }, 2200);
+
+// THEME
+document.getElementById('thmBtn').onclick = () => {
+  const h = document.documentElement;
+  h.dataset.theme = h.dataset.theme==='dark' ? 'light' : 'dark';
+};
+
+// KEYBOARD
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); next(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); prev(); }
+  else if(e.key==='Home') goTo(0);
+  else if(e.key==='End') goTo(N-1);
+  else if(e.key.toLowerCase()==='m') toggleSound();
+});
+
+// SWIPE
+let tx=0;
+document.addEventListener('touchstart',e=>{ tx=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx = e.changedTouches[0].clientX - tx;
+  if(Math.abs(dx)>50){ dx<0?next():prev(); }
+},{passive:true});
+
+// SCRAMBLE on transition
+function scrambleTitle(el){
+  if(!el) return;
+  // Save full innerHTML, work on text nodes only
+  const txt = el.innerText;
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·/';
+  let i=0;
+  const orig = el.innerHTML;
+  // Quick scramble via opacity flash instead of innerHTML manipulation
+  el.style.opacity='0.4';
+  setTimeout(()=>{ el.style.transition='opacity .15s'; el.style.opacity='1'; },80);
+}
+
+// Init
+syncUI();
+slides.forEach(s=>{ s.style.transition=''; });
+</script>
+</body>
+</html>

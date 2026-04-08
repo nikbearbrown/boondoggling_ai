@@ -49,7 +49,9 @@ Brand voice: Clear, direct, practical. No hype, no jargon for its own sake.
 15. `/substack` — Newsletter hub: card grid of all Substack sections
 16. `/substack/[section]` — Section page with article list
 17. `/substack/[section]/[slug]` — Full article with attribution
-18. `/privacy` — Privacy Policy
+18. `/talks` — Talks browser (searchable card grid, grouped by folder, filesystem-driven)
+19. `/talks/[...slug]` — Full-viewport iframe of a talk HTML file
+20. `/privacy` — Privacy Policy
 19. `/privacy/cookies` — Cookie Policy
 20. `/terms-of-service` — Terms of Service
 21. `/admin/login` — Admin login page (password form)
@@ -339,6 +341,9 @@ app/
   notes/page.tsx                    # Notes browser
   notes/NotesBrowser.tsx            # Client component: search + grouped cards
   notes/[...slug]/page.tsx          # Note iframe
+  talks/page.tsx                    # Talks browser
+  talks/TalksBrowser.tsx            # Client component: search + tag filter + grouped cards
+  talks/[...slug]/page.tsx          # Talk iframe
   tools/[slug]/page.tsx             # Tool page
   videos/page.tsx                   # Videos page
   videos/VideosBrowser.tsx          # Client component: pagination + tag filter
